@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author m.smithhva.nl
  */
-public class CountryPersistentDao extends AbstractPersistentDao<Country> {
+public class CountryPersistentDao extends practicum.dao.AbstractPersistentDao<Country> {
 
     @Override
     public List<Country> getAll() {
@@ -26,7 +26,8 @@ public class CountryPersistentDao extends AbstractPersistentDao<Country> {
                 }
             }
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            System.err.printf("Terminating proces due to %s\n", throwables.getMessage());
+            System.exit(2);
         }
 
         return countries;

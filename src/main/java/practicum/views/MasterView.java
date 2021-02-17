@@ -72,19 +72,20 @@ public class MasterView implements View {
         labelDescription = new Label("Description");
         description = new TextArea();
         description.setMinHeight(100);
+
         labelFounded = new Label("Founded");
         founded = new DatePicker(LocalDate.now());
         founded.setMinWidth(WIDTH);
 
         labeIsEUMember = new Label("Member of EU");
-        isEUMember = new CheckBox("(boolean)");
+        isEUMember = new CheckBox("Yes or No");
 
         save = new Button("Save");
         save.setMinWidth(WIDTH);
         save.setTooltip(new Tooltip("Persist country"));
 
         listView = new ListView<>();
-        listView.getItems().add("ListView<TodoRegel>");
+        listView.getItems().addAll("ListView<TodoRegel>", "test2");
 
         nieuw = new Button("Nieuw");
         remove = new Button("Verwijderen");
@@ -178,4 +179,5 @@ public class MasterView implements View {
     public Button getRemove() {
         return remove;
     }
+
 }

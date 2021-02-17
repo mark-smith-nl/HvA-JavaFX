@@ -27,8 +27,8 @@ public class MasterController implements Controller {
     private final CountryService countryService;
 
     public MasterController() {
-        this.view = new MasterView();
-        this.countryService = new CountryService();
+        view = new MasterView();
+        countryService = new CountryService();
         initialize();
     }
 
@@ -51,37 +51,35 @@ public class MasterController implements Controller {
 
         TextField idField = view.getId();
         idField.setEditable(false);
+
         TextField countryField = view.getCountry();
+
         TextField codeField = view.getCode();
         codeField.setEditable(false);
+
         TextArea descriptionField = view.getDescription();
+
         DatePicker foundedField = view.getFounded();
+
         CheckBox isEUMemberField = view.getIsEUMember();
 
-        countriesField.valueProperty().addListener(new ChangeListener<Country>() {
-            @Override
-            public void changed(ObservableValue<? extends Country> observableValue, Country country, Country newCountry) {
-                idField.setText(valueOf(newCountry.getId()));
-                countryField.setText(newCountry.getName());
-                codeField.setText(newCountry.getCode());
-                descriptionField.setText(newCountry.getDescription());
-                foundedField.setValue(newCountry.getFounded());
-                isEUMemberField.setSelected(newCountry.isEUMumber());
-            }
+        countriesField.valueProperty().addListener((observableValue, country, newCountry) -> {
+            idField.setText(valueOf(newCountry.getId()));
+            countryField.setText(newCountry.getName());
+            codeField.setText(newCountry.getCode());
+            descriptionField.setText(newCountry.getDescription());
+            foundedField.setValue(newCountry.getFounded());
+            isEUMemberField.setSelected(newCountry.isEUMumber());
         });
 
         Button saveButton = view.getSave();
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Country country = countriesField.getValue();
-                int id = country.getId();
-                country.setName(countryField.getText());
-                country.setDescription(descriptionField.getText());
-                country.setFounded(foundedField.getValue());
-                country.setEUMumber(isEUMemberField.isSelected());
-                countryService.update(country);
-            }
+        saveButton.setOnAction(actionEvent -> {
+            Country country = countriesField.getValue();
+            country.setName(countryField.getText());
+            country.setDescription(descriptionField.getText());
+            country.setFounded(foundedField.getValue());
+            country.setEUMumber(isEUMemberField.isSelected());
+            countryService.update(country);
         });
 
         countriesField.getSelectionModel().selectFirst();
