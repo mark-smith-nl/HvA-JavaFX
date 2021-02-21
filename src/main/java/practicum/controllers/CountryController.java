@@ -1,17 +1,16 @@
 package practicum.controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
+import practicum.MainApplication;
 import practicum.models.Country;
 import practicum.service.CountryService;
-import practicum.views.MasterView;
-import practicum.views.View;
+import practicum.views.CountryView;
+
+import java.util.Map;
+import java.util.Set;
 
 import static java.lang.String.*;
 
@@ -20,22 +19,23 @@ import static java.lang.String.*;
  *
  * @author m.smithhva.nl
  */
-public class MasterController implements Controller {
-
-    private final MasterView view;
+public class CountryController extends NavigatorController<CountryView> {
 
     private final CountryService countryService;
 
-    public MasterController() {
-        view = new MasterView();
-        countryService = new CountryService();
+    public CountryController(MainApplication mainApplication, Set<NavigatorController<?>> abstractControllers) {
+        super(mainApplication, abstractControllers, new CountryView());
+
+        this.countryService = new CountryService();
         initialize();
     }
 
-    private void initialize() {
+    protected void initialize() {
+        super.initialize();
+
         ObservableList<Country> countries = FXCollections.observableArrayList(countryService.getAll());
 
-        ComboBox<Country> countriesField = view.getCountries();
+        ComboBox<Country> countriesField = view.getCountriesField();
         countriesField.getItems().addAll(countries);
         countriesField.setConverter(new StringConverter<>() {
             @Override
@@ -49,19 +49,19 @@ public class MasterController implements Controller {
             }
         });
 
-        TextField idField = view.getId();
+        TextField idField = view.getIdField();
         idField.setEditable(false);
 
-        TextField countryField = view.getCountry();
+        TextField countryField = view.getCountryField();
 
-        TextField codeField = view.getCode();
+        TextField codeField = view.getCodeField();
         codeField.setEditable(false);
 
-        TextArea descriptionField = view.getDescription();
+        TextArea descriptionField = view.getDescriptionField();
 
-        DatePicker foundedField = view.getFounded();
+        DatePicker foundedField = view.getField();
 
-        CheckBox isEUMemberField = view.getIsEUMember();
+        CheckBox isEUMemberField = view.getIsEUMemberField();
 
         countriesField.valueProperty().addListener((observableValue, country, newCountry) -> {
             idField.setText(valueOf(newCountry.getId()));
@@ -72,7 +72,7 @@ public class MasterController implements Controller {
             isEUMemberField.setSelected(newCountry.isEUMumber());
         });
 
-        Button saveButton = view.getSave();
+        Button saveButton = view.getButton();
         saveButton.setOnAction(actionEvent -> {
             Country country = countriesField.getValue();
             country.setName(countryField.getText());
@@ -83,10 +83,13 @@ public class MasterController implements Controller {
         });
 
         countriesField.getSelectionModel().selectFirst();
+
+        setSelected();
     }
 
     @Override
-    public View getView() {
-        return view;
+    protected void setSelected() {
+        view.getCountriesButton().setSelected(true);
     }
+
 }
