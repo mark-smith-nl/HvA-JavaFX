@@ -50,7 +50,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        practicum.Main
+                                        main.java.practicum.Main
                                     </mainClass>
                                 </manifest>
                             </archive>
@@ -63,4 +63,5 @@
             </plugin>
         </plugins>
     </build>
+    <!--Osama-->
 </project>

@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import practicum.models.City;
 import practicum.models.Country;
 
 import java.time.LocalDate;
@@ -47,7 +48,7 @@ public class CountryView extends NavigatorView {
 
     private final Button Button;
 
-    private ListView<String> listView;
+    private final ListView<City> listView;
 
     private final Button newButton, removeButton, backButton;
 
@@ -91,7 +92,6 @@ public class CountryView extends NavigatorView {
         Button.setTooltip(new Tooltip("Persist country"));
 
         listView = new ListView<>();
-        listView.getItems().addAll("ListView<TodoRegel>", "test2");
 
         newButton = new Button("Nieuw");
         removeButton = new Button("Verwijderen");
@@ -179,6 +179,10 @@ public class CountryView extends NavigatorView {
 
     public CheckBox getIsEUMemberField() {
         return isEUMemberField;
+    }
+
+    public ListView<City> getListView() {
+        return listView;
     }
 
     public Button getButton() {

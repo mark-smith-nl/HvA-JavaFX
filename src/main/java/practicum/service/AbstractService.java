@@ -20,5 +20,7 @@ public abstract class AbstractService<T> {
 
     public abstract List<T> getAll();
 
+    public abstract T getById(int id);
+
     public abstract void update(T entity);
 }

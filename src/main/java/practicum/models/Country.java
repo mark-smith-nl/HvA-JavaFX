@@ -1,6 +1,7 @@
 package practicum.models;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import static java.lang.String.format;
 
@@ -11,9 +12,9 @@ import static java.lang.String.format;
  */
 public class Country {
 
-    private final int id;
+    private int id;
 
-    private final String code;
+    private String code;
 
     private String name;
 
@@ -23,10 +24,16 @@ public class Country {
 
     private boolean isEUMumber;
 
-    public Country(int id, String code, String name, String description) {
+    private Set<City> cities;
+
+    public Country(int id, String name) {
         this.id = id;
-        this.code = code;
         this.name = name;
+    }
+
+    public Country(int id, String code, String name, String description) {
+        this(id, name);
+        this.code = code;
         this.description = description;
     }
 

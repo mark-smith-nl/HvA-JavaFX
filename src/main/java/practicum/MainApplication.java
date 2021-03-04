@@ -1,7 +1,6 @@
 package practicum;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 import practicum.controllers.AboutController;
 import practicum.controllers.CitiesController;
@@ -35,7 +34,10 @@ public class MainApplication extends Application {
         stage.setWidth(WIDTH);
         stage.setHeight(HEIGHT);
 
-        switchController(controllers.iterator().next());
+        switchController(controllers.stream()
+                .filter(c -> c instanceof CountryController)
+                .findAny()
+                .orElseThrow(IllegalStateException::new));
 
         stage.show();
     }

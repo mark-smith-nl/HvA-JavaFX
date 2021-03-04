@@ -5,10 +5,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import practicum.MainApplication;
+import practicum.models.City;
 import practicum.models.Country;
+import practicum.service.CityService;
 import practicum.service.CountryService;
 import practicum.views.CountryView;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,10 +26,14 @@ public class CountryController extends NavigatorController<CountryView> {
 
     private final CountryService countryService;
 
+    private final CityService cityService;
+
     public CountryController(MainApplication mainApplication, Set<NavigatorController<?>> abstractControllers) {
         super(mainApplication, abstractControllers, new CountryView());
 
         this.countryService = new CountryService();
+        this.cityService = new CityService();
+
         initialize();
     }
 
@@ -34,7 +41,6 @@ public class CountryController extends NavigatorController<CountryView> {
         super.initialize();
 
         ObservableList<Country> countries = FXCollections.observableArrayList(countryService.getAll());
-
         ComboBox<Country> countriesField = view.getCountriesField();
         countriesField.getItems().addAll(countries);
         countriesField.setConverter(new StringConverter<>() {
@@ -63,14 +69,23 @@ public class CountryController extends NavigatorController<CountryView> {
 
         CheckBox isEUMemberField = view.getIsEUMemberField();
 
+        ObservableList<City> cities = FXCollections.observableArrayList(cityService.getAll());
+        ListView<City> listViewField = view.getListView();
+        listViewField.getItems().addAll(cities);
+        countriesField.setOnAction(actionEvent -> System.out.println(countriesField.getSelectionModel().getSelectedItem()));
+
         countriesField.valueProperty().addListener((observableValue, country, newCountry) -> {
-            idField.setText(valueOf(newCountry.getId()));
-            countryField.setText(newCountry.getName());
-            codeField.setText(newCountry.getCode());
-            descriptionField.setText(newCountry.getDescription());
-            foundedField.setValue(newCountry.getFounded());
-            isEUMemberField.setSelected(newCountry.isEUMumber());
+            Country countryExtended = countryService.getById(newCountry.getId());
+            idField.setText(valueOf(countryExtended.getId()));
+            countryField.setText(countryExtended.getName());
+            codeField.setText(countryExtended.getCode());
+            descriptionField.setText(countryExtended.getDescription());
+            foundedField.setValue(countryExtended.getFounded());
+            isEUMemberField.setSelected(countryExtended.isEUMumber());
+            listViewField.getItems().setAll(cityService.getForCountry(newCountry));
         });
+
+        listViewField.setOnMouseClicked(mouseEvent -> System.out.println(listViewField.getSelectionModel().getSelectedIndex()));
 
         Button saveButton = view.getButton();
         saveButton.setOnAction(actionEvent -> {
