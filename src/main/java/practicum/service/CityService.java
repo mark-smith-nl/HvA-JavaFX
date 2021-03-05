@@ -37,7 +37,7 @@ public class CityService extends AbstractService<City> {
         List<City> cities = new ArrayList<>();
 
         for (int i=0; i<10; i++) {
-            cities.add(new City(i, "Stad " + i + " in " + country.getName(), "Omschrijving"));
+            cities.add(new City(i, "Stad " + i + " in " + country.getName(), "Omschrijving", country));
         }
          return cities;
        // return ((CityPersistentDao) persistentDao).getForCountryID(country.getId());

@@ -19,19 +19,36 @@ public class CitiesView extends NavigatorView {
 
     private final GridPane gridPane;
 
-    private final Label labelCities;
-    private final TextField citiesField;
+    private final Label labelId;
+    private final TextField idField;
 
+    private final Label labelName;
+    private final TextField nameField;
+
+    private final Label labelCountry;
+    private final TextField countryField;
 
     public CitiesView() {
         super();
         gridPane = new GridPane();
 
-        labelCities = new Label("Developer");
-        citiesField = new TextField();
-        citiesField.setBorder(new Border(new BorderStroke(Color.RED,
+        labelId = new Label("Id");
+        idField = new TextField();
+        idField.setBorder(new Border(new BorderStroke(Color.RED,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        citiesField.setTooltip(new Tooltip("Immutable"));
+        idField.setTooltip(new Tooltip("Immutable"));
+
+        labelName = new Label("Name");
+        nameField = new TextField();
+        nameField.setBorder(new Border(new BorderStroke(Color.RED,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        nameField.setTooltip(new Tooltip("Immutable"));
+
+        labelCountry = new Label("Country");
+        countryField = new TextField();
+        countryField.setBorder(new Border(new BorderStroke(Color.RED,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        countryField.setTooltip(new Tooltip("Immutable"));
 
         initialize();
     }
@@ -50,8 +67,14 @@ public class CitiesView extends NavigatorView {
 
         bodyGridPane.getColumnConstraints().add(new ColumnConstraints(80, 80, 80));
 
-        bodyGridPane.add(labelCities, 0, row);
-        bodyGridPane.add(citiesField, 1, row, 2, 1);
+        bodyGridPane.add(labelId, 0, row);
+        bodyGridPane.add(idField, 1, row++);
+
+        bodyGridPane.add(labelName, 0, row);
+        bodyGridPane.add(nameField, 1, row++);
+
+        bodyGridPane.add(labelCountry, 0, row);
+        bodyGridPane.add(countryField, 1, row++);
     }
 
     @Override
@@ -59,7 +82,15 @@ public class CitiesView extends NavigatorView {
         return gridPane;
     }
 
-    public TextField getCitiesField() {
-        return citiesField;
+    public TextField getIdField() {
+        return idField;
+    }
+
+    public TextField getNameField() {
+        return nameField;
+    }
+
+    public TextField getCountryField() {
+        return countryField;
     }
 }

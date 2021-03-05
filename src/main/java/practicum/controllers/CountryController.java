@@ -2,6 +2,7 @@ package practicum.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import practicum.MainApplication;
@@ -13,6 +14,7 @@ import practicum.views.CountryView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import static java.lang.String.*;
@@ -74,18 +76,27 @@ public class CountryController extends NavigatorController<CountryView> {
         listViewField.getItems().addAll(cities);
         countriesField.setOnAction(actionEvent -> System.out.println(countriesField.getSelectionModel().getSelectedItem()));
 
-        countriesField.valueProperty().addListener((observableValue, country, newCountry) -> {
-            Country countryExtended = countryService.getById(newCountry.getId());
+        countriesField.valueProperty().addListener((observableValue, country, selectedCountry) -> {
+            Country countryExtended = countryService.getById(selectedCountry.getId());
             idField.setText(valueOf(countryExtended.getId()));
             countryField.setText(countryExtended.getName());
             codeField.setText(countryExtended.getCode());
             descriptionField.setText(countryExtended.getDescription());
             foundedField.setValue(countryExtended.getFounded());
             isEUMemberField.setSelected(countryExtended.isEUMumber());
-            listViewField.getItems().setAll(cityService.getForCountry(newCountry));
+            listViewField.getItems().setAll(cityService.getForCountry(selectedCountry));
         });
 
-        listViewField.setOnMouseClicked(mouseEvent -> System.out.println(listViewField.getSelectionModel().getSelectedIndex()));
+        listViewField.setOnMouseClicked(mouseEvent -> {
+            CitiesController citiesController = controllers.stream()
+                    .filter(c -> c instanceof CitiesController)
+                    .map(c -> (CitiesController) c).findAny()
+                    .orElseThrow(IllegalStateException::new);
+
+            citiesController.setCity(listViewField.getSelectionModel().getSelectedItem());
+            view.getCitiesButton().fire();
+
+        });
 
         Button saveButton = view.getButton();
         saveButton.setOnAction(actionEvent -> {

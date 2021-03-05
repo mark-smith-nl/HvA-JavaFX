@@ -19,10 +19,15 @@ public class City {
 
     private String description;
 
-    public City(int id, String name, String description) {
+    public City(int id, String name, String description, Country country) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.country = country;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public Country getCountry() {
