@@ -34,7 +34,7 @@ public class CityService extends AbstractService<City> {
     }
 
     public List<City> getForCountry(Country country) {
-        // TODO Implement fetching from database (or file)
+        // TODO Implement fetching from database (or file) or any other resource
         List<City> cities = new ArrayList<>();
 
         for (int i=0; i<10; i++) {
