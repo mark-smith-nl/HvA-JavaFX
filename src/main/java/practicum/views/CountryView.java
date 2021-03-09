@@ -48,7 +48,7 @@ public class CountryView extends NavigatorView {
 
     private final Button Button;
 
-    private final ListView<City> listView;
+    private final ListView<City> citiesListView;
 
     private final Button newButton, removeButton, backButton;
 
@@ -91,7 +91,7 @@ public class CountryView extends NavigatorView {
         Button.setMinWidth(WIDTH);
         Button.setTooltip(new Tooltip("Persist country"));
 
-        listView = new ListView<>();
+        citiesListView = new ListView<>();
 
         newButton = new Button("Nieuw");
         removeButton = new Button("Verwijderen");
@@ -141,7 +141,7 @@ public class CountryView extends NavigatorView {
         bodyGridPane.add(Button, 0, row++, 3, 1);
         // gridPane.add(opslaan, 1, row++);
 
-        bodyGridPane.add(listView, 0, row++, 3, 1);
+        bodyGridPane.add(citiesListView, 0, row++, 3, 1);
 
         bodyGridPane.add(newButton, 0, row);
         bodyGridPane.add(removeButton, 1, row);
@@ -181,8 +181,8 @@ public class CountryView extends NavigatorView {
         return isEUMemberField;
     }
 
-    public ListView<City> getListView() {
-        return listView;
+    public ListView<City> getCitiesListView() {
+        return citiesListView;
     }
 
     public Button getButton() {

@@ -18,6 +18,10 @@ public abstract class AbstractPersistentDao<T> {
 
     public static final String POSTGRES_DATABASE_TYPE = "POSTGRES";
 
+    private static  String databaseType = "";
+
+    private static  String password = "";
+
     public static final String H2_DATABASE_NAME = "h2db";
 
     public static final String H2_FILENAME = H2_DATABASE_NAME + ".mv.db";
@@ -25,14 +29,15 @@ public abstract class AbstractPersistentDao<T> {
     public static final String H2_FILEPATH = System.getProperty("user.home") + "/" + H2_FILENAME;
 
     protected Connection getConnection() throws SQLException, ClassNotFoundException {
-        return POSTGRES_DATABASE_TYPE.equals(System.getProperty("databaseType")) ? getPostgresConnection() : getH2DbConnection();
+        return POSTGRES_DATABASE_TYPE.equals(databaseType) ? getPostgresConnection() : getH2DbConnection();
     }
 
     private Connection getPostgresConnection() throws SQLException {
-        String url = "jdbc:postgresql://localhost/msmith?searchpath=sandbox";
+        String url = "jdbc:postgresql://localhost/msmith";
         Properties props = new Properties();
+        props.setProperty("currentSchema", "sandbox");
         props.setProperty("user", "msmith");
-        props.setProperty("password", System.getProperty("password"));
+        props.setProperty("password", password);
 
         return DriverManager.getConnection(url, props);
     }
@@ -40,6 +45,22 @@ public abstract class AbstractPersistentDao<T> {
     private Connection getH2DbConnection() throws SQLException, ClassNotFoundException {
         Class.forName("org.h2.Driver");
         return DriverManager.getConnection("jdbc:h2:~/" + H2_DATABASE_NAME, "sa", "");
+    }
+
+    public static String getDatabaseType() {
+        return databaseType;
+    }
+
+    public static void setDatabaseType(String databaseType) {
+        AbstractPersistentDao.databaseType = databaseType;
+    }
+
+    public static String getPassword() {
+        return password;
+    }
+
+    public static void setPassword(String password) {
+        AbstractPersistentDao.password = password;
     }
 
     public abstract List<T> getAll();

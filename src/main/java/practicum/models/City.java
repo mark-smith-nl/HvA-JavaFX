@@ -19,6 +19,17 @@ public class City {
 
     private String description;
 
+    public City(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public City(int id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
     public City(int id, String name, String description, Country country) {
         this.id = id;
         this.name = name;

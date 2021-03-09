@@ -72,8 +72,8 @@ public class CountryController extends NavigatorController<CountryView> {
         CheckBox isEUMemberField = view.getIsEUMemberField();
 
         ObservableList<City> cities = FXCollections.observableArrayList(cityService.getAll());
-        ListView<City> listViewField = view.getListView();
-        listViewField.getItems().addAll(cities);
+        ListView<City> citiesListView = view.getCitiesListView();
+        citiesListView.getItems().addAll(cities);
         countriesField.setOnAction(actionEvent -> System.out.println(countriesField.getSelectionModel().getSelectedItem()));
 
         countriesField.valueProperty().addListener((observableValue, country, selectedCountry) -> {
@@ -84,16 +84,19 @@ public class CountryController extends NavigatorController<CountryView> {
             descriptionField.setText(countryExtended.getDescription());
             foundedField.setValue(countryExtended.getFounded());
             isEUMemberField.setSelected(countryExtended.isEUMumber());
-            listViewField.getItems().setAll(cityService.getForCountry(selectedCountry));
+            citiesListView.getItems().setAll(cityService.getForCountry(selectedCountry));
         });
 
-        listViewField.setOnMouseClicked(mouseEvent -> {
+        citiesListView.setOnMouseClicked(mouseEvent -> {
             CitiesController citiesController = controllers.stream()
                     .filter(c -> c instanceof CitiesController)
                     .map(c -> (CitiesController) c).findAny()
                     .orElseThrow(IllegalStateException::new);
 
-            citiesController.setCity(listViewField.getSelectionModel().getSelectedItem());
+            Country country = countriesField.getSelectionModel().getSelectedItem();
+            City cityExtended = cityService.getById(citiesListView.getSelectionModel().getSelectedItem().getId());
+            cityExtended.setCountry(country);
+            citiesController.setCity(citiesListView.getSelectionModel().getSelectedItem());
             view.getCitiesButton().fire();
 
         });
@@ -117,5 +120,6 @@ public class CountryController extends NavigatorController<CountryView> {
     protected void setSelected() {
         view.getCountriesButton().setSelected(true);
     }
+
 
 }
