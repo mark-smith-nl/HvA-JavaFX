@@ -62,7 +62,8 @@ public abstract class NavigatorController<T extends NavigatorView> {
                 mainApplication.switchController(controller);
             });
         } else {
-            copyDatabaseButton.setVisible(false);
+          //  copyDatabaseButton.setVisible(false);
+            copyDatabaseButton.setDisable(true);
         }
 
         view.getExitButton().setOnAction(actionEvent -> {

@@ -2,10 +2,7 @@ package practicum.views;
 
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
 
@@ -38,7 +35,7 @@ public abstract class NavigatorView {
         citiesButton = new ToggleButton("Cities");
         citiesButton.setId("cities");
 
-        copyDatabaseButton = new ToggleButton("Copy db");
+        copyDatabaseButton = new ToggleButton("Copy PGDB to H2DB");
         copyDatabaseButton.setId("copyDB");
 
         exitButton = new ToggleButton("Exit");
