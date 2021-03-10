@@ -6,7 +6,6 @@ import practicum.views.AboutView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Map;
 import java.util.Set;
 
 import static java.lang.String.valueOf;
@@ -32,18 +31,18 @@ public class AboutController extends NavigatorController<AboutView> {
         developerField.setEditable(false);
 
         TextArea descriptionField = view.getDescriptionField();
-        descriptionField.setText("applivation to show countries\n and cities.");
+        descriptionField.setText("Application to show countries\n and cities.");
         descriptionField.setEditable(false);
 
         TextField createdField = view.getCreatedField();
         createdField.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
         createdField.setEditable(false);
 
-        setSelected();
+        setMenuButtonSelected();
     }
 
     @Override
-    protected void setSelected() {
+    protected void setMenuButtonSelected() {
         view.getAboutButton().setSelected(true);
     }
 

@@ -2,16 +2,15 @@ package practicum;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import practicum.controllers.AboutController;
-import practicum.controllers.CitiesController;
-import practicum.controllers.CountryController;
-import practicum.controllers.NavigatorController;
+import practicum.controllers.*;
+import practicum.dao.AbstractPersistentDao;
+import practicum.service.CopyDatabaseService;
 
 import java.util.*;
 
 public class MainApplication extends Application {
 
-    public static final String TITLE = "Practicum week 2";
+    public static final String TITLE = "Alleen samen krijgen we OOP2 eronder";
 
     public static final double WIDTH = 800;
 
@@ -28,14 +27,16 @@ public class MainApplication extends Application {
         controllers.addAll(Arrays.asList(
                 new AboutController(this, controllers),
                 new CountryController(this, controllers),
-                new CitiesController(this, controllers)));
+                new CitiesController(this, controllers),
+                new CopyDatabaseController(this, controllers))
+                );
 
         stage.setTitle(TITLE);
         stage.setWidth(WIDTH);
         stage.setHeight(HEIGHT);
 
         switchController(controllers.stream()
-                .filter(c -> c instanceof CountryController)
+                .filter(c -> c instanceof AboutController)
                 .findAny()
                 .orElseThrow(IllegalStateException::new));
 

@@ -28,6 +28,9 @@ public class CitiesView extends NavigatorView {
     private final Label labelCountry;
     private final TextField countryField;
 
+    private final Label labelDescription;
+    private final TextArea descriptionField;
+
     public CitiesView() {
         super();
         gridPane = new GridPane();
@@ -49,6 +52,10 @@ public class CitiesView extends NavigatorView {
         countryField.setBorder(new Border(new BorderStroke(Color.RED,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
         countryField.setTooltip(new Tooltip("Immutable"));
+
+        labelDescription = new Label("Description");
+        descriptionField = new TextArea();
+        descriptionField.setMinHeight(100);
 
         initialize();
     }
@@ -75,6 +82,9 @@ public class CitiesView extends NavigatorView {
 
         bodyGridPane.add(labelCountry, 0, row);
         bodyGridPane.add(countryField, 1, row++);
+
+        bodyGridPane.add(labelDescription, 0, row);
+        bodyGridPane.add(descriptionField, 1, row);
     }
 
     @Override
@@ -92,5 +102,9 @@ public class CitiesView extends NavigatorView {
 
     public TextField getCountryField() {
         return countryField;
+    }
+
+    public TextArea getDescriptionField() {
+        return descriptionField;
     }
 }

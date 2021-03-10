@@ -9,9 +9,7 @@ import static java.lang.String.format;
  *
  * @author m.smithhva.nl
  */
-public class City {
-
-    private final int id;
+public class City extends AbstractModel {
 
     private Country country;
 
@@ -20,25 +18,18 @@ public class City {
     private String description;
 
     public City(int id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
     }
 
-    public City(int id, String name, String description) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-    }
-
-    public City(int id, String name, String description, Country country) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
+    public City(int id, String name, Country country) {
+       this(id, name);
         this.country = country;
     }
 
-    public int getId() {
-        return id;
+    public City(int id, String name, Country country, String description) {
+        this(id, name, country);
+        this.description = description;
     }
 
     public Country getCountry() {
@@ -67,6 +58,6 @@ public class City {
 
     @Override
     public String toString() {
-        return format("%s " + " (%s)....", name, id);
+        return format("%s " + " (%s)", name, id);
     }
 }

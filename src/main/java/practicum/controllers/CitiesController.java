@@ -36,13 +36,14 @@ public class CitiesController extends NavigatorController<CitiesView> {
 
     public void setCity(City city) {
         this.city = city;
-        view.getIdField().setText(valueOf(city.getId()));
-        view.getNameField().setText(city.getName());
-        view.getCountryField().setText(city.getCountry().getName());
+        view.getIdField().setText(city == null ? "" : valueOf(city.getId()));
+        view.getNameField().setText(city == null ? "" : city.getName());
+        view.getCountryField().setText(city == null ? "" : city.getCountry().getName());
+        view.getDescriptionField().setText(city == null ? "" : city.getDescription());
     }
 
     @Override
-    protected void setSelected() {
+    protected void setMenuButtonSelected() {
         view.getCitiesButton().setSelected(true);
     }
 

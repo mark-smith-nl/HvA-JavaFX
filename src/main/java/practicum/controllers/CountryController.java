@@ -2,7 +2,6 @@ package practicum.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.util.StringConverter;
 import practicum.MainApplication;
@@ -12,9 +11,6 @@ import practicum.service.CityService;
 import practicum.service.CountryService;
 import practicum.views.CountryView;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import static java.lang.String.*;
@@ -71,10 +67,7 @@ public class CountryController extends NavigatorController<CountryView> {
 
         CheckBox isEUMemberField = view.getIsEUMemberField();
 
-        ObservableList<City> cities = FXCollections.observableArrayList(cityService.getAll());
         ListView<City> citiesListView = view.getCitiesListView();
-        citiesListView.getItems().addAll(cities);
-        countriesField.setOnAction(actionEvent -> System.out.println(countriesField.getSelectionModel().getSelectedItem()));
 
         countriesField.valueProperty().addListener((observableValue, country, selectedCountry) -> {
             Country countryExtended = countryService.getById(selectedCountry.getId());
@@ -84,42 +77,52 @@ public class CountryController extends NavigatorController<CountryView> {
             descriptionField.setText(countryExtended.getDescription());
             foundedField.setValue(countryExtended.getFounded());
             isEUMemberField.setSelected(countryExtended.isEUMumber());
+
             citiesListView.getItems().setAll(cityService.getForCountry(selectedCountry));
+
+            CitiesController citiesController = getControllerByClass(CitiesController.class);
+            if (citiesController != null) citiesController.setCity(null);
         });
 
         citiesListView.setOnMouseClicked(mouseEvent -> {
-            CitiesController citiesController = controllers.stream()
-                    .filter(c -> c instanceof CitiesController)
-                    .map(c -> (CitiesController) c).findAny()
-                    .orElseThrow(IllegalStateException::new);
-
+            CitiesController citiesController = getControllerByClass(CitiesController.class);
             Country country = countriesField.getSelectionModel().getSelectedItem();
             City cityExtended = cityService.getById(citiesListView.getSelectionModel().getSelectedItem().getId());
             cityExtended.setCountry(country);
-            citiesController.setCity(citiesListView.getSelectionModel().getSelectedItem());
+            citiesController.setCity(cityExtended);
             view.getCitiesButton().fire();
-
         });
 
-        Button saveButton = view.getButton();
+        Button saveButton = view.getSaveButton();
         saveButton.setOnAction(actionEvent -> {
             Country country = countriesField.getValue();
             country.setName(countryField.getText());
+            country.setCode(codeField.getText());
             country.setDescription(descriptionField.getText());
             country.setFounded(foundedField.getValue());
             country.setEUMumber(isEUMemberField.isSelected());
             countryService.update(country);
         });
 
+        Button undoButton = view.getUndoButton();
+        undoButton.setOnAction(actionEvent -> {
+            Country country = countriesField.getValue();
+            country = countryService.getById(country.getId());
+            countryField.setText(country.getName());
+            codeField.setText(country.getCode());
+            descriptionField.setText(country.getDescription());
+            foundedField.setValue(country.getFounded());
+            isEUMemberField.setSelected(country.isEUMumber());
+        });
+
         countriesField.getSelectionModel().selectFirst();
 
-        setSelected();
+        setMenuButtonSelected();
     }
 
     @Override
-    protected void setSelected() {
+    protected void setMenuButtonSelected() {
         view.getCountriesButton().setSelected(true);
     }
-
 
 }

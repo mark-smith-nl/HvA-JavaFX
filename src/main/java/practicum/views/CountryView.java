@@ -46,11 +46,11 @@ public class CountryView extends NavigatorView {
     private final Label labeIsEUMember;
     private final CheckBox isEUMemberField;
 
-    private final Button Button;
+    private final Button saveButton;
 
     private final ListView<City> citiesListView;
 
-    private final Button newButton, removeButton, backButton;
+    private final Button newButton, removeButton, undoButton;
 
 
     public CountryView() {
@@ -87,17 +87,19 @@ public class CountryView extends NavigatorView {
         labeIsEUMember = new Label("Member of EU");
         isEUMemberField = new CheckBox("Yes or No");
 
-        Button = new Button("Save");
-        Button.setMinWidth(WIDTH);
-        Button.setTooltip(new Tooltip("Persist country"));
+        saveButton = new Button("Save");
+        saveButton.setMinWidth(WIDTH);
+        saveButton.setTooltip(new Tooltip("Persist country"));
 
         citiesListView = new ListView<>();
 
         newButton = new Button("Nieuw");
         removeButton = new Button("Verwijderen");
         removeButton.setMinWidth(WIDTH);
+        removeButton.setTooltip(new Tooltip("Remove country"));
 
-        backButton = new Button("Terug naar overzicht");
+        undoButton = new Button("Undo");
+        undoButton.setTooltip(new Tooltip("Undo"));
 
         initialize();
 
@@ -138,14 +140,13 @@ public class CountryView extends NavigatorView {
         bodyGridPane.add(labeIsEUMember, 0, row);
         bodyGridPane.add(isEUMemberField, 1, row++);
 
-        bodyGridPane.add(Button, 0, row++, 3, 1);
-        // gridPane.add(opslaan, 1, row++);
+        bodyGridPane.add(saveButton, 0, row++, 3, 1);
 
         bodyGridPane.add(citiesListView, 0, row++, 3, 1);
 
         bodyGridPane.add(newButton, 0, row);
         bodyGridPane.add(removeButton, 1, row);
-        bodyGridPane.add(backButton, 2, row);
+        bodyGridPane.add(undoButton, 2, row);
     }
 
     @Override
@@ -185,8 +186,8 @@ public class CountryView extends NavigatorView {
         return citiesListView;
     }
 
-    public Button getButton() {
-        return Button;
+    public Button getSaveButton() {
+        return saveButton;
     }
 
     public Button getNewButton() {
@@ -197,4 +198,7 @@ public class CountryView extends NavigatorView {
         return removeButton;
     }
 
+    public Button getUndoButton() {
+        return undoButton;
+    }
 }

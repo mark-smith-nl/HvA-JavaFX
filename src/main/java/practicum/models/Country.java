@@ -10,9 +10,7 @@ import static java.lang.String.format;
  *
  * @author m.smithhva.nl
  */
-public class Country {
-
-    private int id;
+public class Country extends AbstractModel{
 
     private String code;
 
@@ -27,18 +25,16 @@ public class Country {
     private Set<City> cities;
 
     public Country(int id, String name) {
-        this.id = id;
+        super(id);
         this.name = name;
     }
 
-    public Country(int id, String code, String name, String description) {
+    public Country(int id, String name, String code, String description, LocalDate founded, boolean isEUMumber) {
         this(id, name);
         this.code = code;
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
+        this.founded = founded;
+        this.isEUMumber = isEUMumber;
     }
 
     public String getCode() {
@@ -51,6 +47,10 @@ public class Country {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public String getDescription() {
