@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface AbstractDao<T> {
 
+    // Note the method load is not implemented: all entries are retrieved from a database.
+    // A set of entries is not stored in the DAO's.
     List<T> getAll();
 
     T getById(int id);

@@ -3,6 +3,8 @@ package practicum.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 import practicum.MainApplication;
 import practicum.models.City;
@@ -11,7 +13,8 @@ import practicum.service.CityService;
 import practicum.service.CountryService;
 import practicum.views.CountryView;
 
-import java.util.Set;
+import java.util.Collections;
+import java.util.List;
 
 import static java.lang.String.*;
 
@@ -20,17 +23,12 @@ import static java.lang.String.*;
  *
  * @author m.smithhva.nl
  */
-public class CountryController extends NavigatorController<CountryView> {
+public class CountryController extends NavigatorController<CountryView> implements ModifyEntity<Country> {
 
-    private final CountryService countryService;
+    private Country country;
 
-    private final CityService cityService;
-
-    public CountryController(MainApplication mainApplication, Set<NavigatorController<?>> abstractControllers) {
-        super(mainApplication, abstractControllers, new CountryView());
-
-        this.countryService = new CountryService();
-        this.cityService = new CityService();
+    public CountryController(MainApplication mainApplication) {
+        super(mainApplication, new CountryView());
 
         initialize();
     }
@@ -38,7 +36,7 @@ public class CountryController extends NavigatorController<CountryView> {
     protected void initialize() {
         super.initialize();
 
-        ObservableList<Country> countries = FXCollections.observableArrayList(countryService.getAll());
+        ObservableList<Country> countries = FXCollections.observableArrayList(mainApplication.getServiceByClass(CountryService.class).getAll());
         ComboBox<Country> countriesField = view.getCountriesField();
         countriesField.getItems().addAll(countries);
         countriesField.setConverter(new StringConverter<>() {
@@ -53,71 +51,96 @@ public class CountryController extends NavigatorController<CountryView> {
             }
         });
 
-        TextField idField = view.getIdField();
-        idField.setEditable(false);
+        countriesField.valueProperty().addListener((observableValue, country, selectedCountry) -> countriesFieldChanged(selectedCountry));
 
-        TextField countryField = view.getCountryField();
+        view.getNewCountryButton().setOnAction(actionEvent -> newCountry());
 
-        TextField codeField = view.getCodeField();
-        codeField.setEditable(false);
+        view.getSaveButton().setOnAction(actionEvent -> saveCountry());
 
-        TextArea descriptionField = view.getDescriptionField();
+        view.getUndoCountryChangesButton().setOnAction(actionEvent -> undoChanges());
 
-        DatePicker foundedField = view.getField();
+        view.getCitiesField().setOnMouseClicked(this::citySelected);
 
-        CheckBox isEUMemberField = view.getIsEUMemberField();
-
-        ListView<City> citiesListView = view.getCitiesListView();
-
-        countriesField.valueProperty().addListener((observableValue, country, selectedCountry) -> {
-            Country countryExtended = countryService.getById(selectedCountry.getId());
-            idField.setText(valueOf(countryExtended.getId()));
-            countryField.setText(countryExtended.getName());
-            codeField.setText(countryExtended.getCode());
-            descriptionField.setText(countryExtended.getDescription());
-            foundedField.setValue(countryExtended.getFounded());
-            isEUMemberField.setSelected(countryExtended.isEUMumber());
-
-            citiesListView.getItems().setAll(cityService.getForCountry(selectedCountry));
-
-            CitiesController citiesController = getControllerByClass(CitiesController.class);
-            if (citiesController != null) citiesController.setCity(null);
-        });
-
-        citiesListView.setOnMouseClicked(mouseEvent -> {
-            CitiesController citiesController = getControllerByClass(CitiesController.class);
-            Country country = countriesField.getSelectionModel().getSelectedItem();
-            City cityExtended = cityService.getById(citiesListView.getSelectionModel().getSelectedItem().getId());
-            cityExtended.setCountry(country);
-            citiesController.setCity(cityExtended);
-            view.getCitiesButton().fire();
-        });
-
-        Button saveButton = view.getSaveButton();
-        saveButton.setOnAction(actionEvent -> {
+        view.getNewCityButton().setOnAction(actionEvent -> {
             Country country = countriesField.getValue();
-            country.setName(countryField.getText());
-            country.setCode(codeField.getText());
-            country.setDescription(descriptionField.getText());
-            country.setFounded(foundedField.getValue());
-            country.setEUMumber(isEUMemberField.isSelected());
-            countryService.update(country);
+            City city = new City(-1, "Specify a name", country);
+            CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
+            citiesController.setControlledEntity(city);
+            citiesController.setMenuButtonSelected();
+            mainApplication.switchController(citiesController);
         });
 
-        Button undoButton = view.getUndoButton();
-        undoButton.setOnAction(actionEvent -> {
-            Country country = countriesField.getValue();
-            country = countryService.getById(country.getId());
-            countryField.setText(country.getName());
-            codeField.setText(country.getCode());
-            descriptionField.setText(country.getDescription());
-            foundedField.setValue(country.getFounded());
-            isEUMemberField.setSelected(country.isEUMumber());
-        });
+        // TODO What if there are no countries?
+        countriesField.getSelectionModel().select(mainApplication.getServiceByClass(CountryService.class).getById(154));
 
-        countriesField.getSelectionModel().selectFirst();
+        view.setEditable(false, view.getIdField(), view.getCodeField());
 
         setMenuButtonSelected();
+    }
+
+    private void countriesFieldChanged(Country selectedCountry) {
+        Country country = mainApplication.getServiceByClass(CountryService.class).getById(selectedCountry.getId());
+        country.setCities(mainApplication.getServiceByClass(CityService.class).getForCountry(selectedCountry));
+        setControlledEntity(country);
+    }
+
+    private void newCountry() {
+        country = new Country(0, "");
+        country.setCities(Collections.emptyList());
+        setControlledEntity(country);
+        view.setEditable(true, view.getCodeField());
+        view.getCountriesField().setDisable(true);
+        view.getCitiesField().setDisable(true);
+    }
+
+    private void saveCountry() {
+        country.setName(view.getCountryField().getText());
+        country.setCode(view.getCodeField().getText());
+        country.setDescription(view.getDescriptionField().getText());
+        country.setFounded(view.getField().getValue());
+        country.setEUMumber(view.getIsEUMemberField().isSelected());
+
+        mainApplication.getServiceByClass(CountryService.class).update(country);
+    }
+
+    private void undoChanges() {
+        view.getCountryField().setText(country.getName());
+        view.getCodeField().setText(country.getCode());
+        view.getDescriptionField().setText(country.getDescription());
+        view.getField().setValue(country.getFounded());
+        view.getIsEUMemberField().setSelected(country.isEUMumber());
+    }
+
+    private void citySelected(MouseEvent mouseEvent) {
+        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+            CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
+            City city = view.getCitiesField().getSelectionModel().getSelectedItem();
+            if (city != null) {
+                city = mainApplication.getServiceByClass(CityService.class).getById(city.getId());
+                city.setCountry(country);
+                citiesController.setControlledEntity(city);
+                view.getCitiesButton().fire();
+            }
+        } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+            System.out.println("To be implemented: delete on context click");
+        }
+    }
+
+    @Override
+    public void setControlledEntity(Country country) {
+        this.country = country;
+        view.getIdField().setText(valueOf(country.getId()));
+        view.getCountryField().setText(country.getName());
+        view.getCodeField().setText(country.getCode());
+        view.getDescriptionField().setText(country.getDescription());
+        view.getField().setValue(country.getFounded());
+        view.getIsEUMemberField().setSelected(country.isEUMumber());
+
+        view.getCitiesField().getItems().setAll(country.getCities());
+
+        CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
+        if (citiesController != null) citiesController.setControlledEntity(null);
+        view.setEditable(false, view.getIdField(), view.getCodeField());
     }
 
     @Override

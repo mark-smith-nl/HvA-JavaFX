@@ -18,8 +18,6 @@ public class AboutView extends NavigatorView {
 
     private static final double WIDTH = 400;
 
-    private final GridPane gridPane;
-
     private final Label labelDeveloper;
     private final TextField developerField;
 
@@ -32,27 +30,17 @@ public class AboutView extends NavigatorView {
 
     public AboutView() {
         super();
-        gridPane = new GridPane();
 
         labelDeveloper = new Label("Developer");
         developerField = new TextField();
-        developerField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        developerField.setTooltip(new Tooltip("Immutable"));
 
         labelDescription = new Label("Description");
         descriptionField = new TextArea();
         descriptionField.setMinHeight(100);
-        descriptionField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        descriptionField.setTooltip(new Tooltip("Immutable"));
 
         labelCreated = new Label("Created");
         createdField = new TextField();
         createdField.setMinWidth(WIDTH);
-        createdField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        createdField.setTooltip(new Tooltip("Immutable"));
 
         initialize();
     }

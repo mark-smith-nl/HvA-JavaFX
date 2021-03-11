@@ -18,8 +18,6 @@ public class CopyDatabaseView extends NavigatorView {
 
     private static final double WIDTH = 400;
 
-    private final GridPane gridPane;
-
     private final Label labelAction;
     private final TextField actionField;
 
@@ -33,28 +31,18 @@ public class CopyDatabaseView extends NavigatorView {
 
     public CopyDatabaseView() {
         super();
-        gridPane = new GridPane();
 
         labelAction = new Label("Action");
         actionField = new TextField();
         actionField.setMinWidth(WIDTH);
-        actionField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        actionField.setTooltip(new Tooltip("Immutable"));
 
         labelPath = new Label("Path");
         pathField = new TextField();
         pathField.setMinWidth(WIDTH);
-        pathField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        pathField.setTooltip(new Tooltip("Immutable"));
 
         labelStatus = new Label("Status");
         statusField = new TextField();
         statusField.setMinWidth(WIDTH);
-        statusField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        statusField.setTooltip(new Tooltip("Immutable"));
 
         startCopyDatabaseButton = new Button("Start");
         startCopyDatabaseButton.setMinWidth(WIDTH);

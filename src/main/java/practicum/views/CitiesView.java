@@ -17,8 +17,6 @@ public class CitiesView extends NavigatorView {
 
     private static final double WIDTH = 400;
 
-    private final GridPane gridPane;
-
     private final Label labelId;
     private final TextField idField;
 
@@ -33,25 +31,15 @@ public class CitiesView extends NavigatorView {
 
     public CitiesView() {
         super();
-        gridPane = new GridPane();
 
         labelId = new Label("Id");
         idField = new TextField();
-        idField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        idField.setTooltip(new Tooltip("Immutable"));
 
         labelName = new Label("Name");
         nameField = new TextField();
-        nameField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        nameField.setTooltip(new Tooltip("Immutable"));
 
         labelCountry = new Label("Country");
         countryField = new TextField();
-        countryField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        countryField.setTooltip(new Tooltip("Immutable"));
 
         labelDescription = new Label("Description");
         descriptionField = new TextArea();

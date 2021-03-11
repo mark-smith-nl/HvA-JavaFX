@@ -3,7 +3,8 @@ package practicum.views;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 
 
 /**
@@ -15,6 +16,12 @@ public abstract class NavigatorView {
 
     private static final double WIDTH = 150;
 
+    private static final Border RED_BORDER = new Border(new BorderStroke(Color.RED, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+    private static final Tooltip READ_ONLY = new Tooltip("Immutable - Read only");
+
+    protected final GridPane gridPane;
+
     protected final GridPane navigatorGridPane;
 
     private final ToggleGroup buttonGroup;
@@ -22,7 +29,9 @@ public abstract class NavigatorView {
     private final ToggleButton aboutButton, countriesButton, citiesButton, copyDatabaseButton, exitButton;
 
     public NavigatorView() {
-        this.navigatorGridPane = new GridPane();
+        gridPane = new GridPane();
+
+        navigatorGridPane = new GridPane();
 
         buttonGroup = new ToggleGroup();
 
@@ -84,4 +93,20 @@ public abstract class NavigatorView {
     }
 
     public abstract Parent getRoot();
+
+    public void setEditable(boolean editable, TextInputControl... textInputControls) {
+        for (TextInputControl textInputControl : textInputControls) {
+            textInputControl.setEditable(editable);
+            if (editable) {
+                textInputControl.setBorder(null);
+                textInputControl.setTooltip(null);
+                textInputControl.setStyle(("-fx-background-color: #ffffff;"));
+            } else {
+                textInputControl.setBorder(RED_BORDER);
+                textInputControl.setTooltip(READ_ONLY);
+                textInputControl.setStyle(("-fx-background-color: #f0f0f0;"));
+            }
+        }
+    }
+
 }

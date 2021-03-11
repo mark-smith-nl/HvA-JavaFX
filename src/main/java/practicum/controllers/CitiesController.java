@@ -19,12 +19,12 @@ import static java.lang.String.valueOf;
  *
  * @author m.smithhva.nl
  */
-public class CitiesController extends NavigatorController<CitiesView> {
+public class CitiesController extends NavigatorController<CitiesView> implements ModifyEntity<City>{
 
     private City city;
 
-    public CitiesController(MainApplication mainApplication, Set<NavigatorController<?>> abstractControllers) {
-        super(mainApplication, abstractControllers, new CitiesView());
+    public CitiesController(MainApplication mainApplication) {
+        super(mainApplication, new CitiesView());
 
         initialize();
     }
@@ -32,9 +32,11 @@ public class CitiesController extends NavigatorController<CitiesView> {
     protected void initialize() {
         super.initialize();
 
+        view.setEditable(false, view.getIdField(), view.getCountryField());
     }
 
-    public void setCity(City city) {
+    @Override
+    public void setControlledEntity(City city) {
         this.city = city;
         view.getIdField().setText(city == null ? "" : valueOf(city.getId()));
         view.getNameField().setText(city == null ? "" : city.getName());

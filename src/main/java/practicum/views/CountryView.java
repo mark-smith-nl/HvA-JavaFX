@@ -23,8 +23,6 @@ public class CountryView extends NavigatorView {
 
     private static final double WIDTH = 400;
 
-    private final GridPane gridPane;
-
     private final Label labelCountries;
     private final ComboBox<Country> countriesField;
 
@@ -43,19 +41,18 @@ public class CountryView extends NavigatorView {
     private final Label labelFounded;
     private final DatePicker Field;
 
-    private final Label labeIsEUMember;
+    private final Label labelIsEUMember;
     private final CheckBox isEUMemberField;
 
     private final Button saveButton;
 
-    private final ListView<City> citiesListView;
+    private final Label labelCities;
+    private final ListView<City> citiesField;
 
-    private final Button newButton, removeButton, undoButton;
-
+    private final Button newCountryButton, removeCountryButton, undoCountryChangesButton, newCityButton;
 
     public CountryView() {
         super();
-        gridPane = new GridPane();
 
         labelCountries = new Label("Countries");
         countriesField = new ComboBox<>();
@@ -63,18 +60,12 @@ public class CountryView extends NavigatorView {
 
         labelId = new Label("Id");
         idField = new TextField("");
-        idField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        idField.setTooltip(new Tooltip("Immutable"));
 
         labelCountry = new Label("Country");
         countryField = new TextField();
 
         labelCode = new Label("Code");
         codeField = new TextField();
-        codeField.setBorder(new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        codeField.setTooltip(new Tooltip("Immutable"));
 
         labelDescription = new Label("Description");
         descriptionField = new TextArea();
@@ -84,25 +75,30 @@ public class CountryView extends NavigatorView {
         Field = new DatePicker(LocalDate.now());
         Field.setMinWidth(WIDTH);
 
-        labeIsEUMember = new Label("Member of EU");
-        isEUMemberField = new CheckBox("Yes or No");
+        labelIsEUMember = new Label("Member of EU");
+        isEUMemberField = new CheckBox();
 
         saveButton = new Button("Save");
         saveButton.setMinWidth(WIDTH);
         saveButton.setTooltip(new Tooltip("Persist country"));
 
-        citiesListView = new ListView<>();
+        labelCities = new Label("Cities (Click to open in a new pane - Context click to remove)");
+        citiesField = new ListView<>();
 
-        newButton = new Button("Nieuw");
-        removeButton = new Button("Verwijderen");
-        removeButton.setMinWidth(WIDTH);
-        removeButton.setTooltip(new Tooltip("Remove country"));
+        newCountryButton = new Button("New");
+        newCountryButton.setTooltip(new Tooltip("New country"));
 
-        undoButton = new Button("Undo");
-        undoButton.setTooltip(new Tooltip("Undo"));
+        removeCountryButton = new Button("Remove");
+        removeCountryButton.setMinWidth(WIDTH);
+        removeCountryButton.setTooltip(new Tooltip("Remove country"));
+
+        undoCountryChangesButton = new Button("Undo");
+        undoCountryChangesButton.setTooltip(new Tooltip("Undo changes"));
+
+        newCityButton = new Button("New");
+        newCityButton.setTooltip(new Tooltip("New city - for selected country"));
 
         initialize();
-
     }
 
     public void initialize() {
@@ -137,16 +133,20 @@ public class CountryView extends NavigatorView {
         bodyGridPane.add(labelFounded, 0, row);
         bodyGridPane.add(Field, 1, row++, 2, 1);
 
-        bodyGridPane.add(labeIsEUMember, 0, row);
+        bodyGridPane.add(labelIsEUMember, 0, row);
         bodyGridPane.add(isEUMemberField, 1, row++);
 
-        bodyGridPane.add(saveButton, 0, row++, 3, 1);
+        bodyGridPane.add(newCountryButton, 0, row);
+        bodyGridPane.add(saveButton, 1, row, 1, 1);
+        bodyGridPane.add(undoCountryChangesButton, 2, row++);
 
-        bodyGridPane.add(citiesListView, 0, row++, 3, 1);
+        bodyGridPane.add(removeCountryButton, 1, row++);
 
-        bodyGridPane.add(newButton, 0, row);
-        bodyGridPane.add(removeButton, 1, row);
-        bodyGridPane.add(undoButton, 2, row);
+
+        bodyGridPane.add(labelCities, 0, row++, 3, 1);
+        bodyGridPane.add(citiesField, 0, row++, 3, 1);
+
+        bodyGridPane.add(newCityButton, 0, row);
     }
 
     @Override
@@ -182,23 +182,27 @@ public class CountryView extends NavigatorView {
         return isEUMemberField;
     }
 
-    public ListView<City> getCitiesListView() {
-        return citiesListView;
+    public ListView<City> getCitiesField() {
+        return citiesField;
     }
 
     public Button getSaveButton() {
         return saveButton;
     }
 
-    public Button getNewButton() {
-        return newButton;
+    public Button getNewCountryButton() {
+        return newCountryButton;
     }
 
-    public Button getRemoveButton() {
-        return removeButton;
+    public Button getRemoveCountryButton() {
+        return removeCountryButton;
     }
 
-    public Button getUndoButton() {
-        return undoButton;
+    public Button getUndoCountryChangesButton() {
+        return undoCountryChangesButton;
+    }
+
+    public Button getNewCityButton() {
+        return newCityButton;
     }
 }

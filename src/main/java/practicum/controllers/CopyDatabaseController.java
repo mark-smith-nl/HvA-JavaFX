@@ -21,8 +21,8 @@ public class CopyDatabaseController extends NavigatorController<CopyDatabaseView
 
     private final CopyDatabaseService copyDatabaseService;
 
-    public CopyDatabaseController(MainApplication mainApplication, Set<NavigatorController<?>> abstractControllers) {
-        super(mainApplication, abstractControllers, new CopyDatabaseView());
+    public CopyDatabaseController(MainApplication mainApplication) {
+        super(mainApplication, new CopyDatabaseView());
 
         this.copyDatabaseService = new CopyDatabaseService();
 
@@ -47,8 +47,10 @@ public class CopyDatabaseController extends NavigatorController<CopyDatabaseView
         view.getStartCopyDatabaseButton().setOnAction(actionEvent -> {
             statusField.setText("Start");
             copyDatabaseService.start();
-            statusField.setText(DateTimeFormatter.ofPattern("hh:MM:ss").format(LocalDateTime.now()));
+            statusField.setText("Run: " + DateTimeFormatter.ofPattern("HH:MM:ss").format(LocalDateTime.now()));
         });
+
+        view.setEditable(false, actionField, pathField, statusField);
 
         setMenuButtonSelected();
 

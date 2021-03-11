@@ -29,6 +29,7 @@ public class CopyDatabaseService {
         countryPersistentDao.copyEntitiesFromPostgresToH2Db();
         cityPersistentDao.initializeH2DbTable();
         cityPersistentDao.copyEntitiesFromPostgresToH2Db();
+        System.out.printf("Created file '%s'\n", Configuration.H2_FILEPATH);
     }
 
     private void deleteH2DB() {

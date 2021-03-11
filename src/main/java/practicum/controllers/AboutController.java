@@ -17,8 +17,8 @@ import static java.lang.String.valueOf;
  */
 public class AboutController extends NavigatorController<AboutView> {
 
-    public AboutController(MainApplication mainApplication, Set<NavigatorController<?>> abstractControllers) {
-        super(mainApplication, abstractControllers, new AboutView());
+    public AboutController(MainApplication mainApplication) {
+        super(mainApplication, new AboutView());
 
         initialize();
     }
@@ -28,15 +28,14 @@ public class AboutController extends NavigatorController<AboutView> {
 
         TextField developerField = view.getDeveloperField();
         developerField.setText("Mark Smith");
-        developerField.setEditable(false);
 
         TextArea descriptionField = view.getDescriptionField();
         descriptionField.setText("Application to show countries\n and cities.");
-        descriptionField.setEditable(false);
 
         TextField createdField = view.getCreatedField();
         createdField.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-        createdField.setEditable(false);
+
+        view.setEditable(false, developerField, descriptionField, createdField);
 
         setMenuButtonSelected();
     }

@@ -5,7 +5,7 @@ package practicum.models;
  *
  * @author m.smithhva.nl
  */
-public class AbstractModel {
+public abstract class AbstractModel {
 
     protected final int id;
 
