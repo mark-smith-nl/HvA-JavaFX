@@ -19,11 +19,7 @@ public class Configuration {
     public static final String H2_FILENAME = H2_DATABASE_NAME + ".mv.db";
 
     public static final String H2_FILEPATH = System.getProperty("user.home") + "/" + H2_FILENAME;
-
-    public static String getDatabaseType() {
-        return databaseType;
-    }
-
+    
     public static void setDatabaseType(String databaseType) {
         Configuration.databaseType = databaseType;
     }
