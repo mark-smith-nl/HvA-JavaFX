@@ -10,7 +10,7 @@ import static java.lang.String.format;
 import static practicum.models.AbstractModel.NEW_ID;
 
 /**
- * This method <description of functionality>
+ * Abstract service servicing generic AbstractModel instances.
  *
  * @author m.smithhva.nl
  */

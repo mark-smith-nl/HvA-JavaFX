@@ -29,10 +29,15 @@ public class AboutController extends NavigatorController<AboutView> {
         developerField.setText("Mark Smith");
 
         TextArea descriptionField = view.getDescriptionField();
-        descriptionField.setText("Application to show countries\n and cities.");
+        descriptionField.setText("Demo project voor HvA/OOP2\n\n" +
+                "Application to show countries(parent) and cities(child).\n\n" +
+                "This is a program to show students how one could create a program\nNOT how it should be created.\n" +
+                "It stores its data in a H2DB or Postgres.\n" +
+                "It does NOT use files to serialize/deserialize objects.\n\n" +
+                "TODO: Add/remove/modify cities.");
 
         TextField createdField = view.getCreatedField();
-        createdField.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+        createdField.setText(LocalDate.of(2021, 3, 10).format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
         CheckBox isVersionedField = view.getIsVersionedField();
         isVersionedField.setSelected(true);

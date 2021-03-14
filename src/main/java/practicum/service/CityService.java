@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This method <description of functionality>
+ * Service servicing {@link City} instances.
  *
  * @author m.smithhva.nl
  */

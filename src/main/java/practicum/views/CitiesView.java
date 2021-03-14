@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import java.time.LocalDate;
 
 /**
- * This method <description of functionality>
+ * Child entity with parent entity see {@link practicum.models.Country}
  *
  * @author m.smithhva.nl
  */
@@ -48,7 +48,7 @@ public class CitiesView extends NavigatorView {
         initialize();
     }
 
-    public void initialize() {
+    protected void initialize() {
         super.initialize();
 
         gridPane.add(navigatorGridPane, 0, 0);

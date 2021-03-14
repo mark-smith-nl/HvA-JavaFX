@@ -1,9 +1,6 @@
 package practicum.controllers;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
 import practicum.MainApplication;
 import practicum.service.CopyDatabaseService;
 import practicum.views.CopyDatabaseView;
@@ -11,7 +8,7 @@ import practicum.views.CopyDatabaseView;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static practicum.utils.Configuration.*;
+import static practicum.utils.DatabaseConfiguration.*;
 
 /**
  * This method <description of functionality>

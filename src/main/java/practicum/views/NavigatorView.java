@@ -11,7 +11,7 @@ import java.util.Set;
 
 
 /**
- * This method <description of functionality>
+ * Abstract parent view containing menu buttons.
  *
  * @author m.smithhva.nl
  */

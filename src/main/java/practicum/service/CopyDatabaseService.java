@@ -1,15 +1,14 @@
 package practicum.service;
 
-import practicum.dao.AbstractPersistentDao;
 import practicum.dao.CityPersistentDao;
 import practicum.dao.CountryPersistentDao;
-import practicum.utils.Configuration;
+import practicum.utils.DatabaseConfiguration;
 
 import java.io.File;
 import java.sql.SQLException;
 
 /**
- * This method <description of functionality>
+ * Servive for copying a Postgres database to H2DB.
  *
  * @author m.smithhva.nl
  */
@@ -31,18 +30,18 @@ public class CopyDatabaseService {
             countryPersistentDao.copyEntitiesFromPostgresToH2Db();
             cityPersistentDao.initializeH2DbTable();
             cityPersistentDao.copyEntitiesFromPostgresToH2Db();
-            System.out.printf("Created file '%s'\n", Configuration.H2_FILEPATH);
+            System.out.printf("Created file '%s'\n", DatabaseConfiguration.H2_FILEPATH);
         } catch (SQLException throwables) {
             throw new IllegalStateException("Can not copy database");
         }
     }
 
     private void deleteH2DB() {
-        File h2Db = new File(Configuration.H2_FILEPATH);
+        File h2Db = new File(DatabaseConfiguration.H2_FILEPATH);
         if (h2Db.delete())
-            System.out.printf("Deleted file '%s'\n", Configuration.H2_FILEPATH);
+            System.out.printf("Deleted file '%s'\n", DatabaseConfiguration.H2_FILEPATH);
         else
-            System.out.printf("Failed to deleted file '%s'\n", Configuration.H2_FILEPATH);
+            System.out.printf("Failed to deleted file '%s'\n", DatabaseConfiguration.H2_FILEPATH);
     }
 
 }

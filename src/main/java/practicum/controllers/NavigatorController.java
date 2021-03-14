@@ -1,15 +1,10 @@
 package practicum.controllers;
 
-import javafx.event.EventTarget;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import practicum.MainApplication;
-import practicum.dao.AbstractPersistentDao;
-import practicum.models.AbstractModel;
-import practicum.utils.Configuration;
+import practicum.utils.DatabaseConfiguration;
 import practicum.views.NavigatorView;
-
-import java.util.Set;
 
 import static java.lang.String.valueOf;
 
@@ -54,7 +49,7 @@ public abstract class NavigatorController<T extends NavigatorView> {
         });
 
         ToggleButton copyDatabaseButton = view.getCopyDatabaseButton();
-        if (Configuration.isPostgresDatabase()) {
+        if (DatabaseConfiguration.isPostgresDatabase()) {
             copyDatabaseButton.setOnAction(actionEvent -> {
                 CopyDatabaseController controller = mainApplication.getControllerByClass(CopyDatabaseController.class);
                 controller.view.getCopyDatabaseButton().setSelected(true);

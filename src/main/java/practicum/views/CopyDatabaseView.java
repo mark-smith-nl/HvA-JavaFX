@@ -10,7 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
 /**
- * This method <description of functionality>
+ * View to show database copy settings.
  *
  * @author m.smithhva.nl
  */
@@ -50,7 +50,7 @@ public class CopyDatabaseView extends NavigatorView {
         initialize();
     }
 
-    public void initialize() {
+    protected void initialize() {
         super.initialize();
 
         gridPane.add(navigatorGridPane, 0, 0);

@@ -102,7 +102,7 @@ public class CountryPersistentDao extends AbstractPersistentDao<Country> {
         try (Connection connection = getH2DbConnection()) {
             Statement statement = connection.createStatement();
             String sql = "CREATE TABLE countries " +
-                    "(country_id BIGSERIAL not NULL, " +
+                    "(country_id integer auto_increment not NULL primary key, " +
                     " name VARCHAR(64), " +
                     " code VARCHAR(2), " +
                     " description VARCHAR(1024), " +

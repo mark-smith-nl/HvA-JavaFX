@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.Set;
 
 /**
- * This method <description of functionality>
+ * Credentials
  *
  * @author m.smithhva.nl
  */
@@ -50,7 +50,7 @@ public class AboutView extends NavigatorView {
         initialize();
     }
 
-    public void initialize() {
+    protected void initialize() {
         super.initialize();
 
         gridPane.add(navigatorGridPane, 0, 0);

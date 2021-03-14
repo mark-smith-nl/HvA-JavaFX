@@ -1,18 +1,13 @@
 package practicum.dao;
 
-import org.h2.tools.Server;
 import practicum.models.AbstractModel;
-import practicum.models.Country;
-import practicum.utils.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.List;
 import java.util.Properties;
 
-import static practicum.utils.Configuration.*;
+import static practicum.utils.DatabaseConfiguration.*;
 
 /**
  * This method <description of functionality>

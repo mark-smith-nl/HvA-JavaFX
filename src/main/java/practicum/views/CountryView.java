@@ -14,7 +14,7 @@ import practicum.models.Country;
 import java.time.LocalDate;
 
 /**
- * This method <description of functionality>
+ * Parent entity with child entities see {@link City}
  *
  * @author m.smithhva.nl
  */
@@ -102,7 +102,7 @@ public class CountryView extends NavigatorView {
         initialize();
     }
 
-    public void initialize() {
+    protected void initialize() {
         super.initialize();
 
         gridPane.add(navigatorGridPane, 0, 0);

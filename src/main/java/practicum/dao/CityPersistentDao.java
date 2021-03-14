@@ -99,7 +99,7 @@ public class CityPersistentDao extends AbstractPersistentDao<City> {
         try (Connection connection = getH2DbConnection()) {
             Statement statement = connection.createStatement();
             String sql = "CREATE TABLE cities " +
-                    "(city_id INTEGER not NULL, " +
+                    "(city_id integer auto_increment not NULL primary key, " +
                     " name VARCHAR(64), " +
                     " description VARCHAR(1024), " +
                     " country_id INTEGER REFERENCES countries (country_id))";

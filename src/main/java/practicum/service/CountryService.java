@@ -10,7 +10,7 @@ import practicum.dao.CountryPersistentDao;
 import static practicum.models.AbstractModel.*;
 
 /**
- * This method <description of functionality>
+ * Service servicing {@link Country} instances.
  *
  * @author m.smithhva.nl
  */
