@@ -6,7 +6,6 @@ import practicum.views.AboutView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
 
 import static java.lang.String.valueOf;
 
@@ -35,7 +34,10 @@ public class AboutController extends NavigatorController<AboutView> {
         TextField createdField = view.getCreatedField();
         createdField.setText(LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
 
-        view.setEditable(false, developerField, descriptionField, createdField);
+        CheckBox isVersionedField = view.getIsVersionedField();
+        isVersionedField.setSelected(true);
+
+        view.setDisable(true, developerField, descriptionField, createdField, isVersionedField);
 
         setMenuButtonSelected();
     }

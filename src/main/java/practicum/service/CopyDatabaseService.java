@@ -6,6 +6,7 @@ import practicum.dao.CountryPersistentDao;
 import practicum.utils.Configuration;
 
 import java.io.File;
+import java.sql.SQLException;
 
 /**
  * This method <description of functionality>
@@ -25,11 +26,15 @@ public class CopyDatabaseService {
 
     public void start() {
         deleteH2DB();
-        countryPersistentDao.initializeH2DbTable();
-        countryPersistentDao.copyEntitiesFromPostgresToH2Db();
-        cityPersistentDao.initializeH2DbTable();
-        cityPersistentDao.copyEntitiesFromPostgresToH2Db();
-        System.out.printf("Created file '%s'\n", Configuration.H2_FILEPATH);
+        try {
+            countryPersistentDao.initializeH2DbTable();
+            countryPersistentDao.copyEntitiesFromPostgresToH2Db();
+            cityPersistentDao.initializeH2DbTable();
+            cityPersistentDao.copyEntitiesFromPostgresToH2Db();
+            System.out.printf("Created file '%s'\n", Configuration.H2_FILEPATH);
+        } catch (SQLException throwables) {
+            throw new IllegalStateException("Can not copy database");
+        }
     }
 
     private void deleteH2DB() {

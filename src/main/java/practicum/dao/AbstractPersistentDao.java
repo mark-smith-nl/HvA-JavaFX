@@ -1,6 +1,7 @@
 package practicum.dao;
 
 import org.h2.tools.Server;
+import practicum.models.AbstractModel;
 import practicum.models.Country;
 import practicum.utils.Configuration;
 
@@ -18,31 +19,44 @@ import static practicum.utils.Configuration.*;
  *
  * @author m.smithhva.nl
  */
-public abstract class AbstractPersistentDao<T> implements AbstractDao<T> {
+public abstract class AbstractPersistentDao<M extends AbstractModel> implements AbstractDao<M> {
 
-    protected Connection getConnection() throws SQLException, ClassNotFoundException {
+    protected Connection getConnection() {
         return isPostgresDatabase() ? getPostgresConnection() : getH2DbConnection();
     }
 
-    private static Connection getPostgresConnection() throws SQLException {
+    private static Connection getPostgresConnection() {
         String url = "jdbc:postgresql://localhost/msmith";
         Properties props = new Properties();
         props.setProperty("currentSchema", "sandbox");
         props.setProperty("user", "msmith");
         props.setProperty("password", getPassword());
 
-        return DriverManager.getConnection(url, props);
+        try {
+            return DriverManager.getConnection(url, props);
+        } catch (SQLException throwables) {
+            throw new IllegalStateException(throwables);
+        }
     }
 
-    protected static Connection getH2DbConnection() throws SQLException, ClassNotFoundException {
-        Class.forName("org.h2.Driver");
-        return DriverManager.getConnection("jdbc:h2:~/" + H2_DATABASE_NAME, "sa", "");
+    protected static Connection getH2DbConnection() {
+        try {
+            Class.forName("org.h2.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException(e);
+        }
+
+        try {
+            return DriverManager.getConnection("jdbc:h2:~/" + H2_DATABASE_NAME, "sa", "");
+        } catch (SQLException throwables) {
+            throw new IllegalStateException(throwables);
+        }
+
     }
 
-    public abstract void initializeH2DbTable();
-
+    public abstract void initializeH2DbTable() throws SQLException;
 
     //TODO set sequence to highest id
-    public abstract void copyEntitiesFromPostgresToH2Db();
+    public abstract void copyEntitiesFromPostgresToH2Db() throws SQLException;
 }
 

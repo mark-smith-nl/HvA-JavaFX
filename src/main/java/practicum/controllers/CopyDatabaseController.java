@@ -1,14 +1,15 @@
 package practicum.controllers;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 import practicum.MainApplication;
 import practicum.service.CopyDatabaseService;
 import practicum.views.CopyDatabaseView;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
 
 import static practicum.utils.Configuration.*;
 
@@ -44,13 +45,9 @@ public class CopyDatabaseController extends NavigatorController<CopyDatabaseView
         statusField.setText("idle");
         statusField.setEditable(false);
 
-        view.getStartCopyDatabaseButton().setOnAction(actionEvent -> {
-            statusField.setText("Start");
-            copyDatabaseService.start();
-            statusField.setText("Run: " + DateTimeFormatter.ofPattern("HH:MM:ss").format(LocalDateTime.now()));
-        });
+        view.getStartCopyDatabaseButton().setOnAction(actionEvent -> copyDatabase());
 
-        view.setEditable(false, actionField, pathField, statusField);
+        view.setDisable(true, actionField, pathField, statusField);
 
         setMenuButtonSelected();
 
@@ -61,4 +58,11 @@ public class CopyDatabaseController extends NavigatorController<CopyDatabaseView
         view.getCopyDatabaseButton().setSelected(true);
     }
 
+    private void copyDatabase() {
+        view.setVisible(false, view.getStartCopyDatabaseButton());
+        view.getStatusField().setText("Start");
+        copyDatabaseService.start();
+        view.getStatusField().setText("Run: " + DateTimeFormatter.ofPattern("HH:mm:ss").format(LocalDateTime.now()));
+        view.setVisible(true, view.getStartCopyDatabaseButton());
+    }
 }

@@ -1,16 +1,8 @@
 package practicum.controllers;
 
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import practicum.MainApplication;
 import practicum.models.City;
-import practicum.views.AboutView;
 import practicum.views.CitiesView;
-
-import java.time.LocalDate;
-import java.util.Map;
-import java.util.Set;
 
 import static java.lang.String.valueOf;
 
@@ -32,7 +24,7 @@ public class CitiesController extends NavigatorController<CitiesView> implements
     protected void initialize() {
         super.initialize();
 
-        view.setEditable(false, view.getIdField(), view.getCountryField());
+        view.setDisable(false, view.getIdField(), view.getCountryField());
     }
 
     @Override

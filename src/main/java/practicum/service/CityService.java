@@ -5,6 +5,7 @@ import practicum.dao.CountryPersistentDao;
 import practicum.models.City;
 import practicum.models.Country;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,22 +20,12 @@ public class CityService extends AbstractService<City> {
         super(new CityPersistentDao());
     }
 
-    public List<City> getAll() {
-        return persistentDao.getAll();
-    }
-
-    @Override
-    public City getById(int id) {
-        return persistentDao.getById(id);
-    }
-
-    @Override
-    public void update(City entity) {
-        persistentDao.update(entity);
-    }
-
     public List<City> getForCountry(Country country) {
-        return ((CityPersistentDao) persistentDao).getForCountry(country);
+        try {
+            return ((CityPersistentDao) persistentDao).getForCountry(country);
+        } catch (SQLException throwables) {
+            throw new IllegalStateException("Can not retrieve cities.", throwables);
+        }
     }
 
 }

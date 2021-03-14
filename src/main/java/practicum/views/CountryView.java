@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import practicum.models.City;
 import practicum.models.Country;
 
@@ -39,17 +38,16 @@ public class CountryView extends NavigatorView {
     private final TextArea descriptionField;
 
     private final Label labelFounded;
-    private final DatePicker Field;
+    private final DatePicker foundedField;
 
     private final Label labelIsEUMember;
     private final CheckBox isEUMemberField;
 
-    private final Button saveButton;
+    private final Button newCountryButton, saveButton, removeCountryButton, undoCountryChangesButton, newCityButton, cancelNewCountryButton;
 
     private final Label labelCities;
     private final ListView<City> citiesField;
 
-    private final Button newCountryButton, removeCountryButton, undoCountryChangesButton, newCityButton;
 
     public CountryView() {
         super();
@@ -72,8 +70,8 @@ public class CountryView extends NavigatorView {
         descriptionField.setMinHeight(100);
 
         labelFounded = new Label("Founded");
-        Field = new DatePicker(LocalDate.now());
-        Field.setMinWidth(WIDTH);
+        foundedField = new DatePicker(LocalDate.now());
+        foundedField.setMinWidth(WIDTH);
 
         labelIsEUMember = new Label("Member of EU");
         isEUMemberField = new CheckBox();
@@ -94,6 +92,9 @@ public class CountryView extends NavigatorView {
 
         undoCountryChangesButton = new Button("Undo");
         undoCountryChangesButton.setTooltip(new Tooltip("Undo changes"));
+
+        cancelNewCountryButton = new Button("Cancel");
+        undoCountryChangesButton.setTooltip(new Tooltip("UCancel new country"));
 
         newCityButton = new Button("New");
         newCityButton.setTooltip(new Tooltip("New city - for selected country"));
@@ -131,17 +132,17 @@ public class CountryView extends NavigatorView {
         bodyGridPane.add(descriptionField, 1, row++, 2, 1);
 
         bodyGridPane.add(labelFounded, 0, row);
-        bodyGridPane.add(Field, 1, row++, 2, 1);
+        bodyGridPane.add(foundedField, 1, row++, 2, 1);
 
         bodyGridPane.add(labelIsEUMember, 0, row);
         bodyGridPane.add(isEUMemberField, 1, row++);
 
         bodyGridPane.add(newCountryButton, 0, row);
+        bodyGridPane.add(cancelNewCountryButton, 0, row);
         bodyGridPane.add(saveButton, 1, row, 1, 1);
         bodyGridPane.add(undoCountryChangesButton, 2, row++);
 
         bodyGridPane.add(removeCountryButton, 1, row++);
-
 
         bodyGridPane.add(labelCities, 0, row++, 3, 1);
         bodyGridPane.add(citiesField, 0, row++, 3, 1);
@@ -174,12 +175,16 @@ public class CountryView extends NavigatorView {
         return descriptionField;
     }
 
-    public DatePicker getField() {
-        return Field;
+    public DatePicker getFoundedField() {
+        return foundedField;
     }
 
     public CheckBox getIsEUMemberField() {
         return isEUMemberField;
+    }
+
+    public Label getLabelCities() {
+        return labelCities;
     }
 
     public ListView<City> getCitiesField() {
@@ -200,6 +205,10 @@ public class CountryView extends NavigatorView {
 
     public Button getUndoCountryChangesButton() {
         return undoCountryChangesButton;
+    }
+
+    public Button getCancelNewCountryButton() {
+        return cancelNewCountryButton;
     }
 
     public Button getNewCityButton() {

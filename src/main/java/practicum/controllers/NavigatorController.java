@@ -14,7 +14,7 @@ import java.util.Set;
 import static java.lang.String.valueOf;
 
 /**
- * This method <description of functionality>
+ * Controller that controlles the behaviour of the buttons in the left navigator grid pane.
  *
  * @author m.smithhva.nl
  */

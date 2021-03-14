@@ -4,10 +4,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import practicum.models.Country;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 /**
  * This method <description of functionality>
@@ -27,6 +26,9 @@ public class AboutView extends NavigatorView {
     private final Label labelCreated;
     private final TextField createdField;
 
+    private final Label labelIsVersioned;
+    private final CheckBox isVersionedField;
+
 
     public AboutView() {
         super();
@@ -41,6 +43,9 @@ public class AboutView extends NavigatorView {
         labelCreated = new Label("Created");
         createdField = new TextField();
         createdField.setMinWidth(WIDTH);
+
+        labelIsVersioned = new Label("Versioned");
+        isVersionedField = new CheckBox();
 
         initialize();
     }
@@ -68,6 +73,9 @@ public class AboutView extends NavigatorView {
         bodyGridPane.add(labelCreated, 0, row);
         bodyGridPane.add(createdField, 1, row++, 2, 1);
 
+        bodyGridPane.add(labelIsVersioned, 0, row);
+        bodyGridPane.add(isVersionedField, 1, row++, 2, 1);
+
     }
 
     @Override
@@ -86,4 +94,9 @@ public class AboutView extends NavigatorView {
     public TextField getCreatedField() {
         return createdField;
     }
+
+    public CheckBox getIsVersionedField() {
+        return isVersionedField;
+    }
+
 }

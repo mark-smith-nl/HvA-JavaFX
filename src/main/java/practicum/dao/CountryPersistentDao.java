@@ -15,7 +15,7 @@ import java.util.List;
 public class CountryPersistentDao extends AbstractPersistentDao<Country> {
 
     @Override
-    public List<Country> getAll() {
+    public List<Country> getAll() throws SQLException {
         List<Country> entities = new ArrayList<>();
 
         try (Connection connection = getConnection()) {
@@ -24,45 +24,39 @@ public class CountryPersistentDao extends AbstractPersistentDao<Country> {
             try (ResultSet resultSet = statement.executeQuery(selectSql)) {
                 while (resultSet.next()) entities.add(new Country(resultSet.getInt("id"), resultSet.getString("name")));
             }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            System.err.printf("Terminating proces due to %s\n", throwables.getMessage());
-            System.exit(2);
         }
 
         return entities;
     }
 
     @Override
-    public Country getById(int id) {
+    public Country getById(int id) throws SQLException {
         Country entity = null;
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT country_id as id, name, code, description, founded, eumember FROM countries where country_id = ?")) {
             preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    if (entity != null) throw new IllegalStateException("Multiple entries found");
-                    Date date = resultSet.getDate("founded");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                if (entity != null) throw new IllegalStateException("Multiple entries found");
+                Date date = resultSet.getDate("founded");
 
-                    entity = new Country(
-                            resultSet.getInt("id"),
-                            resultSet.getString("name"),
-                            resultSet.getString("code"),
-                            resultSet.getString("description"),
-                            date == null ? null : date.toLocalDate(),
-                            resultSet.getBoolean("eumember"));
-                }
+                entity = new Country(
+                        resultSet.getInt("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("code"),
+                        resultSet.getString("description"),
+                        date == null ? null : date.toLocalDate(),
+                        resultSet.getBoolean("eumember"));
             }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throw new IllegalStateException(throwables.getMessage());
         }
 
         return entity;
     }
 
     @Override
-    public void update(Country entity) {
+    public void update(Country entity) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "UPDATE countries SET name = ?, code = ?, description = ?, founded=?, eumember=?  WHERE country_id = ?")) {
@@ -76,34 +70,39 @@ public class CountryPersistentDao extends AbstractPersistentDao<Country> {
             preparedStatement.setBoolean(5, entity.isEUMumber());
             preparedStatement.setInt(6, entity.getId());
             preparedStatement.executeUpdate();
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throw new IllegalStateException(throwables.getMessage());
         }
     }
 
     @Override
-    public void persist(List<Country> entities) {
-        try {
-            Connection connection = getConnection();
-                        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO countries(country_id, name, code, description) VALUES(?, ?, ?, ?)");
-            for (Country entity : entities) {
-                preparedStatement.setInt(1, entity.getId());
-                preparedStatement.setString(2, entity.getName());
-                preparedStatement.setString(3, entity.getCode());
-                preparedStatement.setString(4, entity.getDescription());
-                preparedStatement.execute();
-            }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throw new IllegalStateException(throwables.getMessage());
+    public void insert(Country entity) throws SQLException {
+        try (Connection connection = getConnection();) {
+            String[] key = new String[]{"country_id"};
+            PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO countries(name, code, description) VALUES(?, ?, ?)", key);
+            preparedStatement.setString(1, entity.getName());
+            preparedStatement.setString(2, entity.getCode());
+            preparedStatement.setString(3, entity.getDescription());
+            preparedStatement.executeUpdate();
+
+            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            if (generatedKeys.next()) entity.setId(generatedKeys.getInt(1));
         }
     }
 
     @Override
-    public void initializeH2DbTable() {
+    public void remove(Country entity) throws SQLException {
+        try (Connection connection = getConnection();) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE from countries where country_id=?");
+            preparedStatement.setInt(1, entity.getId());
+            preparedStatement.execute();
+        }
+    }
+
+    @Override
+    public void initializeH2DbTable() throws SQLException {
         try (Connection connection = getH2DbConnection()) {
             Statement statement = connection.createStatement();
             String sql = "CREATE TABLE countries " +
-                    "(country_id INTEGER not NULL, " +
+                    "(country_id BIGSERIAL not NULL, " +
                     " name VARCHAR(64), " +
                     " code VARCHAR(2), " +
                     " description VARCHAR(1024), " +
@@ -111,14 +110,13 @@ public class CountryPersistentDao extends AbstractPersistentDao<Country> {
                     " eumember BOOLEAN DEFAULT false, " +
                     " PRIMARY KEY (country_id ))";
             statement.executeUpdate(sql);
-        } catch (SQLException | ClassNotFoundException throwables) {
-            throw new IllegalStateException(throwables.getMessage());
         }
     }
 
     @Override
-    public void copyEntitiesFromPostgresToH2Db() {
-        try (Connection connection = getConnection(); Connection h2DbConnection = getH2DbConnection()) {
+    public void copyEntitiesFromPostgresToH2Db() throws SQLException {
+        try (Connection connection = getConnection();
+             Connection h2DbConnection = getH2DbConnection()) {
             Statement statement = connection.createStatement();
             String selectSql = "SELECT country_id, name, code, description, founded, eumember FROM countries";
             try (ResultSet resultSet = statement.executeQuery(selectSql)) {
@@ -134,9 +132,6 @@ public class CountryPersistentDao extends AbstractPersistentDao<Country> {
                     preparedStatement.execute();
                 }
             }
-        } catch (SQLException | ClassNotFoundException throwables) {
-            System.err.printf("Terminating proces due to %s\n", throwables.getMessage());
-            System.exit(2);
         }
     }
 }

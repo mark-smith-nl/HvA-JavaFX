@@ -2,11 +2,14 @@ package practicum.controllers;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.util.StringConverter;
 import practicum.MainApplication;
+import practicum.models.AbstractModel;
 import practicum.models.City;
 import practicum.models.Country;
 import practicum.service.CityService;
@@ -14,9 +17,10 @@ import practicum.service.CountryService;
 import practicum.views.CountryView;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Comparator;
 
 import static java.lang.String.*;
+import static practicum.models.AbstractModel.NEW_ID;
 
 /**
  * This method <description of functionality>
@@ -25,6 +29,9 @@ import static java.lang.String.*;
  */
 public class CountryController extends NavigatorController<CountryView> implements ModifyEntity<Country> {
 
+    /* The entity which is shown and being edited.
+    This can either be a persisted entity or a new entity.
+     */
     private Country country;
 
     public CountryController(MainApplication mainApplication) {
@@ -37,6 +44,7 @@ public class CountryController extends NavigatorController<CountryView> implemen
         super.initialize();
 
         ObservableList<Country> countries = FXCollections.observableArrayList(mainApplication.getServiceByClass(CountryService.class).getAll());
+
         ComboBox<Country> countriesField = view.getCountriesField();
         countriesField.getItems().addAll(countries);
         countriesField.setConverter(new StringConverter<>() {
@@ -51,7 +59,7 @@ public class CountryController extends NavigatorController<CountryView> implemen
             }
         });
 
-        countriesField.valueProperty().addListener((observableValue, country, selectedCountry) -> countriesFieldChanged(selectedCountry));
+        countriesField.setOnAction(actionEvent -> countriesFieldChanged(countriesField.getValue()));
 
         view.getNewCountryButton().setOnAction(actionEvent -> newCountry());
 
@@ -59,56 +67,75 @@ public class CountryController extends NavigatorController<CountryView> implemen
 
         view.getUndoCountryChangesButton().setOnAction(actionEvent -> undoChanges());
 
+        view.getCancelNewCountryButton().setOnAction(actionEvent -> cancelNewCountry());
+
+        view.getRemoveCountryButton().setOnAction(actionEvent -> removeCountry());
+
         view.getCitiesField().setOnMouseClicked(this::citySelected);
 
-        view.getNewCityButton().setOnAction(actionEvent -> {
-            Country country = countriesField.getValue();
-            City city = new City(-1, "Specify a name", country);
-            CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
-            citiesController.setControlledEntity(city);
-            citiesController.setMenuButtonSelected();
-            mainApplication.switchController(citiesController);
-        });
+        view.getNewCityButton().setOnAction(actionEvent -> newCity());
 
         // TODO What if there are no countries?
-        countriesField.getSelectionModel().select(mainApplication.getServiceByClass(CountryService.class).getById(154));
 
-        view.setEditable(false, view.getIdField(), view.getCodeField());
-
+        Country selectedCountry = new Country(154, "The Netherlands...."); // Check the equals.
+        countriesField.getSelectionModel().select(selectedCountry);
+        countriesFieldChanged(selectedCountry);
         setMenuButtonSelected();
     }
 
     private void countriesFieldChanged(Country selectedCountry) {
-        Country country = mainApplication.getServiceByClass(CountryService.class).getById(selectedCountry.getId());
-        country.setCities(mainApplication.getServiceByClass(CityService.class).getForCountry(selectedCountry));
-        setControlledEntity(country);
+        // Get all the country data from the database
+        if (selectedCountry != null) {
+            Country country = mainApplication.getServiceByClass(CountryService.class).getById(selectedCountry.getId());
+            // Get all the country data from the database
+            country.setCities(mainApplication.getServiceByClass(CityService.class).getForCountry(country));
+            setControlledEntity(country);
+        }
     }
 
     private void newCountry() {
-        country = new Country(0, "");
+        country = new Country();
         country.setCities(Collections.emptyList());
         setControlledEntity(country);
-        view.setEditable(true, view.getCodeField());
-        view.getCountriesField().setDisable(true);
-        view.getCitiesField().setDisable(true);
     }
 
     private void saveCountry() {
         country.setName(view.getCountryField().getText());
         country.setCode(view.getCodeField().getText());
         country.setDescription(view.getDescriptionField().getText());
-        country.setFounded(view.getField().getValue());
+        country.setFounded(view.getFoundedField().getValue());
         country.setEUMumber(view.getIsEUMemberField().isSelected());
 
-        mainApplication.getServiceByClass(CountryService.class).update(country);
+        try {
+            mainApplication.getServiceByClass(CountryService.class).saveOrUpdate(country);
+            if (!view.getCountriesField().getItems().contains(country)) {
+                view.getCountriesField().getItems().add(country);
+                view.getCountriesField().getSelectionModel().select(country);
+                view.getCountriesField().getItems().sort(Comparator.comparing(Country::getName));
+            }
+            ;
+
+        } catch (Exception e) {
+            new Alert(Alert.AlertType.CONFIRMATION, format("Country %s (%d) was not saved due to:\n%s", country.getName(), country.getId(), e.getMessage()),
+                    ButtonType.OK).show();
+        }
     }
 
     private void undoChanges() {
         view.getCountryField().setText(country.getName());
         view.getCodeField().setText(country.getCode());
         view.getDescriptionField().setText(country.getDescription());
-        view.getField().setValue(country.getFounded());
+        view.getFoundedField().setValue(country.getFounded());
         view.getIsEUMemberField().setSelected(country.isEUMumber());
+    }
+
+    private void cancelNewCountry() {
+        countriesFieldChanged(view.getCountriesField().getSelectionModel().getSelectedItem());
+    }
+
+    private void removeCountry() {
+        mainApplication.getServiceByClass(CountryService.class).remove(country);
+        view.getCountriesField().getItems().remove(country);
     }
 
     private void citySelected(MouseEvent mouseEvent) {
@@ -126,6 +153,15 @@ public class CountryController extends NavigatorController<CountryView> implemen
         }
     }
 
+    private void newCity() {
+        Country country = view.getCountriesField().getValue();
+        City city = new City(NEW_ID, "Specify a name", country);
+        CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
+        citiesController.setControlledEntity(city);
+        citiesController.setMenuButtonSelected();
+        mainApplication.switchController(citiesController);
+    }
+
     @Override
     public void setControlledEntity(Country country) {
         this.country = country;
@@ -133,14 +169,38 @@ public class CountryController extends NavigatorController<CountryView> implemen
         view.getCountryField().setText(country.getName());
         view.getCodeField().setText(country.getCode());
         view.getDescriptionField().setText(country.getDescription());
-        view.getField().setValue(country.getFounded());
+        view.getFoundedField().setValue(country.getFounded());
         view.getIsEUMemberField().setSelected(country.isEUMumber());
 
         view.getCitiesField().getItems().setAll(country.getCities());
 
         CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
         if (citiesController != null) citiesController.setControlledEntity(null);
-        view.setEditable(false, view.getIdField(), view.getCodeField());
+
+        view.setDisable(true, view.getIdField()); // The id field can never be modified by the user
+        if (country.isNewEntity()) {
+            view.setDisable(false, view.getCodeField());
+            view.setDisable(true, view.getCountriesField());
+            view.setVisible(false, view.getNewCountryButton(),
+                    view.getUndoCountryChangesButton(),
+                    view.getRemoveCountryButton(),
+                    view.getLabelCities(),
+                    view.getCitiesField(),
+                    view.getNewCityButton());
+            view.setVisible(true, view.getCancelNewCountryButton(),
+                    view.getSaveButton());
+        } else { // Persisted entity
+            view.setDisable(false, view.getCountriesField());
+            view.setDisable(true, view.getCodeField());
+            view.setVisible(false, view.getCancelNewCountryButton());
+            view.setVisible(true, view.getNewCountryButton(),
+                    view.getSaveButton(),
+                    view.getUndoCountryChangesButton(),
+                    view.getRemoveCountryButton(),
+                    view.getLabelCities(),
+                    view.getCitiesField(),
+                    view.getNewCityButton());
+        }
     }
 
     @Override

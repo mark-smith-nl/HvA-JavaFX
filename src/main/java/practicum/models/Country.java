@@ -2,6 +2,7 @@ package practicum.models;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static java.lang.String.format;
@@ -24,6 +25,10 @@ public class Country extends AbstractModel{
     private boolean isEUMumber;
 
     private List<City> cities;
+
+    public Country() {
+        this(NEW_ID, null);
+    }
 
     public Country(int id, String name) {
         super(id);
@@ -84,6 +89,13 @@ public class Country extends AbstractModel{
 
     public void setCities(List<City> cities) {
         this.cities = cities;
+    }
+
+
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(code, name, description, founded, isEUMumber, cities);
     }
 
     @Override

@@ -6,6 +6,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 /**
  * This method <description of functionality>
@@ -29,6 +32,7 @@ public abstract class NavigatorView {
     private final ToggleButton aboutButton, countriesButton, citiesButton, copyDatabaseButton, exitButton;
 
     public NavigatorView() {
+
         gridPane = new GridPane();
 
         navigatorGridPane = new GridPane();
@@ -94,19 +98,23 @@ public abstract class NavigatorView {
 
     public abstract Parent getRoot();
 
-    public void setEditable(boolean editable, TextInputControl... textInputControls) {
-        for (TextInputControl textInputControl : textInputControls) {
-            textInputControl.setEditable(editable);
-            if (editable) {
-                textInputControl.setBorder(null);
-                textInputControl.setTooltip(null);
-                textInputControl.setStyle(("-fx-background-color: #ffffff;"));
+    public void setDisable(boolean disable, Control... controls) {
+        for (Control control : controls) {
+            control.setDisable(disable);
+            if (disable) {
+                control.setBorder(RED_BORDER);
+                control.setTooltip(READ_ONLY);
+                control.setStyle(("-fx-background-color: #f0f0f0;"));
             } else {
-                textInputControl.setBorder(RED_BORDER);
-                textInputControl.setTooltip(READ_ONLY);
-                textInputControl.setStyle(("-fx-background-color: #f0f0f0;"));
+                control.setBorder(null);
+                control.setTooltip(null);
+                control.setStyle(("-fx-background-color: #ffffff;"));
             }
         }
+    }
+
+    public void setVisible(boolean visible, Control... controls) {
+        for (Control control : controls) control.setVisible(visible);
     }
 
 }
