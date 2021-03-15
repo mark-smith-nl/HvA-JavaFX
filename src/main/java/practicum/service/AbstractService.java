@@ -1,6 +1,6 @@
 package practicum.service;
 
-import practicum.dao.AbstractPersistentDao;
+import practicum.dao.AbstractDatabaseDao;
 import practicum.models.AbstractModel;
 
 import java.sql.SQLException;
@@ -16,16 +16,16 @@ import static practicum.models.AbstractModel.NEW_ID;
  */
 public abstract class AbstractService<M extends AbstractModel> {
 
-    protected final AbstractPersistentDao<M> persistentDao;
+    protected final AbstractDatabaseDao<M> persistentDao;
 
-    public AbstractService(AbstractPersistentDao<M> persistentDao) {
+    public AbstractService(AbstractDatabaseDao<M> persistentDao) {
         this.persistentDao = persistentDao;
     }
 
     public List<M> getAll() {
         try {
             return persistentDao.getAll();
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             throw new IllegalStateException(throwables);
         }
     }
@@ -33,7 +33,7 @@ public abstract class AbstractService<M extends AbstractModel> {
     public M getById(int id) {
         try {
             return persistentDao.getById(id);
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             throw new IllegalStateException(throwables);
         }
     }
@@ -48,8 +48,9 @@ public abstract class AbstractService<M extends AbstractModel> {
     public void remove(M entity) {
         try {
             persistentDao.remove(entity);
-        } catch (SQLException throwables) {
+        } catch (Exception throwables) {
             throw new IllegalStateException(throwables);
         }
     }
+
 }

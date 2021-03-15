@@ -5,7 +5,8 @@ package practicum.utils;
  *
  * @author m.smithhva.nl
  */
-public class DatabaseConfiguration {
+public class PersistencyConfiguration {
+
     private static final String POSTGRES_DATABASE_TYPE = "POSTGRES";
 
     private static String databaseType = "";
@@ -18,8 +19,10 @@ public class DatabaseConfiguration {
 
     public static final String H2_FILEPATH = System.getProperty("user.home") + "/" + H2_FILENAME;
 
+    public static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
+
     public static void setDatabaseType(String databaseType) {
-        DatabaseConfiguration.databaseType = databaseType;
+        PersistencyConfiguration.databaseType = databaseType;
     }
 
     public static String getPassword() {
@@ -27,7 +30,7 @@ public class DatabaseConfiguration {
     }
 
     public static void setPassword(String password) {
-        DatabaseConfiguration.password = password;
+        PersistencyConfiguration.password = password;
     }
 
     public static boolean isPostgresDatabase() {

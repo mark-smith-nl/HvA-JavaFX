@@ -4,7 +4,7 @@ import javafx.application.Application;
 
 import java.io.*;
 
-import static practicum.utils.DatabaseConfiguration.*;
+import static practicum.utils.PersistencyConfiguration.*;
 
 public class Main {
 

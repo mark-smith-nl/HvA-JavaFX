@@ -14,13 +14,18 @@ public interface AbstractDao<M extends AbstractModel> {
 
     // Note the method load is not implemented: all entries are retrieved from a database.
     // A set of entries is not stored in the DAO's.
-    List<M> getAll() throws SQLException;
+    List<M> getAll() throws Exception;
 
-    M getById(int id) throws SQLException;
+    M getById(int id) throws Exception;
 
-    void update(M entity) throws SQLException;
+    void update(M entity) throws Exception;
 
-    void insert(M entity) throws SQLException;
+    /**
+     * Insert the entity in the database and sets its ID
+     * @param entity The specified entity to persist.
+     * @throws SQLException
+     */
+    void insert(M entity) throws Exception;
 
-    void remove(M entity) throws SQLException;
+    void remove(M entity) throws Exception;
 }

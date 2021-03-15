@@ -3,13 +3,8 @@ package practicum;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import practicum.controllers.*;
-import practicum.dao.AbstractDao;
-import practicum.dao.AbstractPersistentDao;
-import practicum.dao.CityPersistentDao;
-import practicum.dao.CountryPersistentDao;
 import practicum.service.AbstractService;
 import practicum.service.CityService;
-import practicum.service.CopyDatabaseService;
 import practicum.service.CountryService;
 
 import java.util.*;

@@ -1,5 +1,9 @@
 package practicum.models;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -12,7 +16,7 @@ import static java.lang.String.format;
  *
  * @author m.smithhva.nl
  */
-public class Country extends AbstractModel{
+public class Country extends AbstractModel {
 
     private String code;
 
@@ -24,7 +28,7 @@ public class Country extends AbstractModel{
 
     private boolean isEUMumber;
 
-    private List<City> cities;
+    private transient List<City> cities;
 
     public Country() {
         this(NEW_ID, null);
@@ -91,8 +95,6 @@ public class Country extends AbstractModel{
         this.cities = cities;
     }
 
-
-
     @Override
     public int hashCode() {
         return Objects.hash(code, name, description, founded, isEUMumber, cities);
@@ -102,4 +104,5 @@ public class Country extends AbstractModel{
     public String toString() {
         return format("%s %s (%s)", name, code, id);
     }
+
 }

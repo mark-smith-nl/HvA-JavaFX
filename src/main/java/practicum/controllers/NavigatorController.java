@@ -3,7 +3,7 @@ package practicum.controllers;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import practicum.MainApplication;
-import practicum.utils.DatabaseConfiguration;
+import practicum.utils.PersistencyConfiguration;
 import practicum.views.NavigatorView;
 
 import static java.lang.String.valueOf;
@@ -13,17 +13,16 @@ import static java.lang.String.valueOf;
  *
  * @author m.smithhva.nl
  */
-public abstract class NavigatorController<T extends NavigatorView> {
+public abstract class NavigatorController<V extends NavigatorView> {
 
-    protected final T view;
-
+    protected final V view;
 
     private Scene scene;
 
     protected final MainApplication mainApplication;
 
     // Note: the controller is aware off all other controllers as well as the mainApplication.
-    public NavigatorController(MainApplication mainApplication, T view) {
+    public NavigatorController(MainApplication mainApplication, V view) {
         this.mainApplication = mainApplication;
         this.view = view;
         scene = new Scene(view.getRoot());
@@ -49,7 +48,7 @@ public abstract class NavigatorController<T extends NavigatorView> {
         });
 
         ToggleButton copyDatabaseButton = view.getCopyDatabaseButton();
-        if (DatabaseConfiguration.isPostgresDatabase()) {
+        if (PersistencyConfiguration.isPostgresDatabase()) {
             copyDatabaseButton.setOnAction(actionEvent -> {
                 CopyDatabaseController controller = mainApplication.getControllerByClass(CopyDatabaseController.class);
                 controller.view.getCopyDatabaseButton().setSelected(true);

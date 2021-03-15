@@ -7,14 +7,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static practicum.utils.DatabaseConfiguration.*;
+import static practicum.utils.PersistencyConfiguration.*;
 
 /**
  * This method <description of functionality>
  *
  * @author m.smithhva.nl
  */
-public abstract class AbstractPersistentDao<M extends AbstractModel> implements AbstractDao<M> {
+public abstract class AbstractDatabaseDao<M extends AbstractModel> implements AbstractDao<M> {
 
     protected Connection getConnection() {
         return isPostgresDatabase() ? getPostgresConnection() : getH2DbConnection();

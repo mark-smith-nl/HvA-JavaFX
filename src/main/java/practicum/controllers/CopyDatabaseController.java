@@ -8,7 +8,7 @@ import practicum.views.CopyDatabaseView;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static practicum.utils.DatabaseConfiguration.*;
+import static practicum.utils.PersistencyConfiguration.*;
 
 /**
  * This method <description of functionality>

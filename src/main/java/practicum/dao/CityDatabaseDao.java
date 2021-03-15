@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author m.smithhva.nl
  */
-public class CityPersistentDao extends AbstractPersistentDao<City> {
+public class CityDatabaseDao extends AbstractDatabaseDao<City> {
 
     @Override
     public List<City> getAll() throws SQLException {
@@ -69,6 +69,9 @@ public class CityPersistentDao extends AbstractPersistentDao<City> {
         }
     }
 
+    /**
+     * {@inheritdoc}
+     */
     @Override
     public void insert(City entity) throws SQLException {
         try (Connection connection = getConnection();) {

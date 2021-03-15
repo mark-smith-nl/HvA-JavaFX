@@ -1,5 +1,6 @@
 package practicum.models;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Objects;
  *
  * @author m.smithhva.nl
  */
-public abstract class AbstractModel {
+public abstract class AbstractModel implements Serializable {
 
     // Note: An id of -1 marks an entity of being a new, not persisted entity.
     public static final int NEW_ID = -1;
