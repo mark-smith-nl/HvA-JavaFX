@@ -30,7 +30,10 @@ public class AboutView extends NavigatorView {
     private final TextField databaseTypeField;
 
     private final Label labelH2DbPath;
-    private final TextField h2DbpathField;
+    private final TextField h2DbPathField;
+
+    private final Label labelTempDirPath;
+    private final TextField tempDirPathField;
 
     public AboutView() {
         super();
@@ -49,11 +52,15 @@ public class AboutView extends NavigatorView {
         labelIsVersioned = new Label("Versioned");
         isVersionedField = new CheckBox("Check git tags");
 
-        labelDatabaseType = new Label("Database");
+        labelDatabaseType = new Label("Act. database");
         databaseTypeField = new TextField();
 
-        labelH2DbPath = new Label("H2DB");
-        h2DbpathField = new TextField();
+        labelH2DbPath = new Label("H2DB path");
+        h2DbPathField = new TextField();
+
+        labelTempDirPath = new Label("Tmp-dir");
+        labelTempDirPath.setTooltip(new Tooltip("Directory where entity object files are stored"));
+        tempDirPathField = new TextField();
 
         initialize();
     }
@@ -88,7 +95,10 @@ public class AboutView extends NavigatorView {
         bodyGridPane.add(databaseTypeField, 1, row++, 2, 1);
 
         bodyGridPane.add(labelH2DbPath, 0, row);
-        bodyGridPane.add(h2DbpathField, 1, row, 2, 1);
+        bodyGridPane.add(h2DbPathField, 1, row++, 2, 1);
+
+        bodyGridPane.add(labelTempDirPath, 0, row);
+        bodyGridPane.add(tempDirPathField, 1, row, 2, 1);
     }
 
     @Override
@@ -116,7 +126,11 @@ public class AboutView extends NavigatorView {
         return databaseTypeField;
     }
 
-    public TextField getH2DbpathField() {
-        return h2DbpathField;
+    public TextField getH2DbPathField() {
+        return h2DbPathField;
+    }
+
+    public TextField getTempDirPathField() {
+        return tempDirPathField;
     }
 }

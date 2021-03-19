@@ -146,9 +146,10 @@ public class CountryController extends NavigatorController<CountryView> implemen
     }
 
     private void citySelected(MouseEvent mouseEvent) {
+        City city = view.getCitiesField().getSelectionModel().getSelectedItem();
+        CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-            CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
-            City city = view.getCitiesField().getSelectionModel().getSelectedItem();
+
             if (city != null) {
                 city = cityService.getById(city.getId());
                 city.setCountry(country);
@@ -156,7 +157,9 @@ public class CountryController extends NavigatorController<CountryView> implemen
                 view.getCitiesButton().fire();
             }
         } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-            System.out.println("To be implemented: delete on context click");
+            cityService.remove(city);
+            citiesController.setControlledEntity(new City(NEW_ID, "Specify a name", view.getCountriesField().getValue()));
+            setControlledEntity(countryService.getById(country.getId())); // Reload the entity
         }
     }
 

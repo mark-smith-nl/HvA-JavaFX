@@ -29,7 +29,7 @@ public abstract class NavigatorView {
 
     private final ToggleGroup buttonGroup;
 
-    private final ToggleButton aboutButton, countriesButton, citiesButton, copyDatabaseButton, exitButton;
+    private final ToggleButton aboutButton, countriesButton, citiesButton, copyDatabaseButton, copyToFilesButton, exitButton;
 
     public NavigatorView() {
 
@@ -51,6 +51,10 @@ public abstract class NavigatorView {
         copyDatabaseButton = new ToggleButton("Copy PGDB to H2DB");
         copyDatabaseButton.setId("copyDB");
 
+        copyToFilesButton = new ToggleButton("Copy to files");
+        copyToFilesButton.setId("copyToFiles");
+        copyToFilesButton.setTooltip(new Tooltip("Flush all entities to file - NOT IMPLEMENTED"));
+
         exitButton = new ToggleButton("Exit");
         exitButton.setId("exit");
     }
@@ -66,6 +70,7 @@ public abstract class NavigatorView {
         navigatorGridPane.add(countriesButton, 1, row++);
         navigatorGridPane.add(citiesButton, 1, row++);
         navigatorGridPane.add(copyDatabaseButton, 1, row++);
+        navigatorGridPane.add(copyToFilesButton, 1, row++);
         navigatorGridPane.add(exitButton, 1, row);
 
         navigatorGridPane.getChildren().stream().filter(n -> n instanceof ButtonBase).map(n -> (ToggleButton) n).forEach(b -> {
@@ -90,6 +95,10 @@ public abstract class NavigatorView {
 
     public ToggleButton getCopyDatabaseButton() {
         return copyDatabaseButton;
+    }
+
+    public ToggleButton getCopyToFilesButton() {
+        return copyToFilesButton;
     }
 
     public ToggleButton getExitButton() {

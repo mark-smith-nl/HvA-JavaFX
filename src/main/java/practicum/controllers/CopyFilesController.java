@@ -6,24 +6,22 @@ import practicum.service.CopyDatabaseService;
 import practicum.utils.ApplicationConfiguration;
 import practicum.views.CopyView;
 
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static java.lang.String.format;
-import static practicum.utils.ApplicationConfiguration.*;
+import static practicum.utils.ApplicationConfiguration.getDatabaseType;
 
 /**
  * This method <description of functionality>
  *
  * @author m.smithhva.nl
  */
-public class CopyDatabaseController extends NavigatorController<CopyView.Database> {
+public class CopyFilesController extends NavigatorController<CopyView.Files> {
 
     private final CopyDatabaseService copyDatabaseService;
 
-    public CopyDatabaseController(MainApplication mainApplication) {
-        super(mainApplication, mainApplication.getViewByClass(CopyView.Database.class));
+    public CopyFilesController(MainApplication mainApplication) {
+        super(mainApplication, mainApplication.getViewByClass(CopyView.Files.class));
 
         this.copyDatabaseService = new CopyDatabaseService(mainApplication);
 
@@ -34,15 +32,15 @@ public class CopyDatabaseController extends NavigatorController<CopyView.Databas
         super.initialize();
 
         TextField actionField = view.getActionField();
-        actionField.setText(format("Copy %s ===> %s", getDatabaseType(), H2DB_DATABASE_TYPE));
+        actionField.setText(String.format("Copy %s ===> Files", getDatabaseType()));
 
         TextField pathField = view.getPathField();
-        pathField.setText(H2_FILEPATH);
+        pathField.setText(ApplicationConfiguration.TEMP_DIR);
 
         TextField statusField = view.getStatusField();
         statusField.setText("idle");
 
-        view.getStartCopyButton().setOnAction(actionEvent -> copy());
+       // TODO Implement view.getStartCopyButton().setOnAction(actionEvent -> copy());
 
         view.setDisable(true, actionField, pathField, statusField);
 

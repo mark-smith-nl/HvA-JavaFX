@@ -59,9 +59,17 @@ public abstract class NavigatorController<V extends NavigatorView> {
             copyDatabaseButton.setDisable(true);
         }
 
+        ToggleButton copyToFilesButton = view.getCopyToFilesButton();
+        copyToFilesButton.setOnAction(actionEvent -> {
+            CopyFilesController controller = mainApplication.getControllerByClass(CopyFilesController.class);
+            controller.view.getCopyToFilesButton().setSelected(true);
+            mainApplication.switchController(controller);
+        });
+
         view.getExitButton().setOnAction(actionEvent -> {
             System.exit(0);
         });
+
     }
 
     protected abstract void setMenuButtonSelected();

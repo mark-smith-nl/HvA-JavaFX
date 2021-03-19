@@ -7,9 +7,9 @@ package practicum.utils;
  */
 public class ApplicationConfiguration {
 
-    private static final String POSTGRES_DATABASE_TYPE = "POSTGRES";
+    public static final String POSTGRES_DATABASE_TYPE = "POSTGRES";
 
-    private static final String H2DB_DATABASE_TYPE = "H2DB";
+    public static final String H2DB_DATABASE_TYPE = "H2DB";
 
     private static String databaseType = "";
 

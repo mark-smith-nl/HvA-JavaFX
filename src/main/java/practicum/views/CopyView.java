@@ -5,16 +5,15 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 
 /**
  * View to show database copy settings.
  *
  * @author m.smithhva.nl
  */
-public class CopyDatabaseView extends NavigatorView {
+public abstract class CopyView extends NavigatorView {
 
     private static final double WIDTH = 400;
 
@@ -27,9 +26,9 @@ public class CopyDatabaseView extends NavigatorView {
     private final Label labelStatus;
     private final TextField statusField;
 
-    private final Button startCopyDatabaseButton;
+    private final Button startCopyButton;
 
-    public CopyDatabaseView() {
+    public CopyView() {
         super();
 
         labelAction = new Label("Action");
@@ -44,8 +43,8 @@ public class CopyDatabaseView extends NavigatorView {
         statusField = new TextField();
         statusField.setMinWidth(WIDTH);
 
-        startCopyDatabaseButton = new Button("Start");
-        startCopyDatabaseButton.setMinWidth(WIDTH);
+        startCopyButton = new Button("Start");
+        startCopyButton.setMinWidth(WIDTH);
 
         initialize();
     }
@@ -73,9 +72,8 @@ public class CopyDatabaseView extends NavigatorView {
         bodyGridPane.add(labelStatus, 0, row);
         bodyGridPane.add(statusField, 1, row++, 2, 1);
 
-        bodyGridPane.add(startCopyDatabaseButton, 1, row, 2, 1);
+        bodyGridPane.add(startCopyButton, 1, row, 2, 1);
     }
-
 
     @Override
     public Parent getRoot() {
@@ -94,7 +92,23 @@ public class CopyDatabaseView extends NavigatorView {
         return statusField;
     }
 
-    public Button getStartCopyDatabaseButton() {
-        return startCopyDatabaseButton;
+    public Button getStartCopyButton() {
+        return startCopyButton;
+    }
+
+    public static class Database extends CopyView {
+
+        public Database() {
+            super();
+        }
+
+    }
+
+    public static class Files extends CopyView {
+
+        public Files() {
+            super();
+        }
+
     }
 }

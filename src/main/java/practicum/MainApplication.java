@@ -9,7 +9,6 @@ import practicum.dao.database.CountryDatabaseDao;
 import practicum.models.AbstractModel;
 import practicum.service.AbstractService;
 import practicum.service.CityService;
-import practicum.service.CopyDatabaseService;
 import practicum.service.CountryService;
 import practicum.utils.ApplicationConfiguration;
 import practicum.views.*;
@@ -54,9 +53,10 @@ public class MainApplication extends Application {
         views.addAll(Arrays.asList(
                 new AboutView(),
                 new CountryView(),
-                new CitiesView()
+                new CitiesView(),
+                new CopyView.Files()
         ));
-        if (usesPostgresDatabase()) views.add(new CopyDatabaseView());
+        if (usesPostgresDatabase()) views.add(new CopyView.Database());
 
         /* First instantiate Dao's.
          * These are being retrieved from the MainApplication instance when services are being instantiated.
@@ -80,7 +80,8 @@ public class MainApplication extends Application {
         controllers.addAll(Arrays.asList(
                 new AboutController(this),
                 new CountryController(this),
-                new CitiesController(this))
+                new CitiesController(this),
+                new CopyFilesController(this))
         );
         // Note: CopyDatabaseService is instantiated in the associated controller since it is not a generic services and uses two dao's.
         if (usesPostgresDatabase()) controllers.add(new CopyDatabaseController(this));

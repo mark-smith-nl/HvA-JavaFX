@@ -47,10 +47,13 @@ public class AboutController extends NavigatorController<AboutView> {
         TextField databaseTypeField = view.getDatabaseTypeField();
         databaseTypeField.setText(ApplicationConfiguration.getDatabaseType());
 
-        TextField h2DbpathField = view.getH2DbpathField();
+        TextField h2DbpathField = view.getH2DbPathField();
         h2DbpathField.setText(H2_FILEPATH);
 
-        view.setDisable(true, developerField, descriptionField, createdField, isVersionedField, databaseTypeField, h2DbpathField);
+        TextField tempDirPathField = view.getTempDirPathField();
+        tempDirPathField.setText(ApplicationConfiguration.TEMP_DIR);
+
+        view.setDisable(true, developerField, descriptionField, createdField, isVersionedField, databaseTypeField, h2DbpathField, tempDirPathField);
 
         setMenuButtonSelected();
     }
