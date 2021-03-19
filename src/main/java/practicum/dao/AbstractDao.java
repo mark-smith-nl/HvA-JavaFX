@@ -16,7 +16,7 @@ public interface AbstractDao<M extends AbstractModel> {
     // A set of entries is not stored in the DAO's.
     List<M> getAll() throws Exception;
 
-    M getById(int id) throws Exception;
+    M getById(long id) throws Exception;
 
     void update(M entity) throws Exception;
 
@@ -28,4 +28,6 @@ public interface AbstractDao<M extends AbstractModel> {
     void insert(M entity) throws Exception;
 
     void remove(M entity) throws Exception;
+
+    long getHighestId(M ... entities) throws SQLException;
 }

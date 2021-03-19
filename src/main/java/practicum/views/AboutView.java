@@ -5,9 +5,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 
-import java.time.LocalDate;
-import java.util.Set;
-
 /**
  * Credentials
  *
@@ -29,6 +26,11 @@ public class AboutView extends NavigatorView {
     private final Label labelIsVersioned;
     private final CheckBox isVersionedField;
 
+    private final Label labelDatabaseType;
+    private final TextField databaseTypeField;
+
+    private final Label labelH2DbPath;
+    private final TextField h2DbpathField;
 
     public AboutView() {
         super();
@@ -45,7 +47,13 @@ public class AboutView extends NavigatorView {
         createdField.setMinWidth(WIDTH);
 
         labelIsVersioned = new Label("Versioned");
-        isVersionedField = new CheckBox();
+        isVersionedField = new CheckBox("Check git tags");
+
+        labelDatabaseType = new Label("Database");
+        databaseTypeField = new TextField();
+
+        labelH2DbPath = new Label("H2DB");
+        h2DbpathField = new TextField();
 
         initialize();
     }
@@ -76,6 +84,11 @@ public class AboutView extends NavigatorView {
         bodyGridPane.add(labelIsVersioned, 0, row);
         bodyGridPane.add(isVersionedField, 1, row++, 2, 1);
 
+        bodyGridPane.add(labelDatabaseType, 0, row);
+        bodyGridPane.add(databaseTypeField, 1, row++, 2, 1);
+
+        bodyGridPane.add(labelH2DbPath, 0, row);
+        bodyGridPane.add(h2DbpathField, 1, row, 2, 1);
     }
 
     @Override
@@ -99,4 +112,11 @@ public class AboutView extends NavigatorView {
         return isVersionedField;
     }
 
+    public TextField getDatabaseTypeField() {
+        return databaseTypeField;
+    }
+
+    public TextField getH2DbpathField() {
+        return h2DbpathField;
+    }
 }

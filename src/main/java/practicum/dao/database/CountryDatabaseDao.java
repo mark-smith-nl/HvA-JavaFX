@@ -1,5 +1,6 @@
-package practicum.dao;
+package practicum.dao.database;
 
+import practicum.dao.database.AbstractDatabaseDao;
 import practicum.models.Country;
 
 import java.sql.*;
@@ -30,13 +31,13 @@ public class CountryDatabaseDao extends AbstractDatabaseDao<Country> {
     }
 
     @Override
-    public Country getById(int id) throws SQLException {
+    public Country getById(long id) throws SQLException {
         Country entity = null;
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT country_id as id, name, code, description, founded, eumember FROM countries where country_id = ?")) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 if (entity != null) throw new IllegalStateException("Multiple entries found");
@@ -68,7 +69,7 @@ public class CountryDatabaseDao extends AbstractDatabaseDao<Country> {
             preparedStatement.setString(3, entity.getDescription());
             preparedStatement.setDate(4, founded);
             preparedStatement.setBoolean(5, entity.isEUMumber());
-            preparedStatement.setInt(6, entity.getId());
+            preparedStatement.setLong(6, entity.getId());
             preparedStatement.executeUpdate();
         }
     }
@@ -95,11 +96,24 @@ public class CountryDatabaseDao extends AbstractDatabaseDao<Country> {
     public void remove(Country entity) throws SQLException {
         try (Connection connection = getConnection();) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE from countries where country_id=?");
-            preparedStatement.setInt(1, entity.getId());
+            preparedStatement.setLong(1, entity.getId());
             preparedStatement.execute();
         }
     }
 
+    @Override
+    public long getHighestId(Country... entities) throws SQLException {
+        long highestId;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            String selectSql = "SELECT currval('countries_countryid_seq') as highestId";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            resultSet.next();
+            highestId = resultSet.getLong("highestId");
+        }
+
+        return highestId;
+    }
     @Override
     public void initializeH2DbTable() throws SQLException {
         try (Connection connection = getH2DbConnection()) {

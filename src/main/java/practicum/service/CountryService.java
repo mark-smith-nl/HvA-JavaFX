@@ -1,8 +1,7 @@
 package practicum.service;
 
+import practicum.MainApplication;
 import practicum.models.Country;
-
-import practicum.dao.CountryDatabaseDao;
 
 /**
  * Service servicing {@link Country} instances.
@@ -11,8 +10,8 @@ import practicum.dao.CountryDatabaseDao;
  */
 public class CountryService extends AbstractService<Country> {
 
-    public CountryService() {
-        super(new CountryDatabaseDao());
+    public CountryService(MainApplication mainApplication) {
+        super(mainApplication, mainApplication.getDaoByModelClass(Country.class));
     }
 
 }

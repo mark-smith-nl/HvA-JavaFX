@@ -2,12 +2,14 @@ package practicum.controllers;
 
 import javafx.scene.control.*;
 import practicum.MainApplication;
+import practicum.utils.ApplicationConfiguration;
 import practicum.views.AboutView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static java.lang.String.valueOf;
+import static practicum.utils.ApplicationConfiguration.H2_FILEPATH;
 
 /**
  * This method <description of functionality>
@@ -17,7 +19,7 @@ import static java.lang.String.valueOf;
 public class AboutController extends NavigatorController<AboutView> {
 
     public AboutController(MainApplication mainApplication) {
-        super(mainApplication, new AboutView());
+        super(mainApplication, mainApplication.getViewByClass(AboutView.class));
 
         initialize();
     }
@@ -42,7 +44,13 @@ public class AboutController extends NavigatorController<AboutView> {
         CheckBox isVersionedField = view.getIsVersionedField();
         isVersionedField.setSelected(true);
 
-        view.setDisable(true, developerField, descriptionField, createdField, isVersionedField);
+        TextField databaseTypeField = view.getDatabaseTypeField();
+        databaseTypeField.setText(ApplicationConfiguration.getDatabaseType());
+
+        TextField h2DbpathField = view.getH2DbpathField();
+        h2DbpathField.setText(H2_FILEPATH);
+
+        view.setDisable(true, developerField, descriptionField, createdField, isVersionedField, databaseTypeField, h2DbpathField);
 
         setMenuButtonSelected();
     }

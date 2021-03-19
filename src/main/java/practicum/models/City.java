@@ -17,13 +17,13 @@ public class City extends AbstractModel {
 
     private String description;
 
-    public City(int id, String name) {
+    public City(long id, String name) {
         super(id);
         this.name = name;
     }
 
-    public City(int id, String name, Country country) {
-       this(id, name);
+    public City(long id, String name, Country country) {
+        this(id, name);
         this.country = country;
     }
 

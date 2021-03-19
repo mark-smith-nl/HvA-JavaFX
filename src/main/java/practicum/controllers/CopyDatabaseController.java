@@ -8,7 +8,7 @@ import practicum.views.CopyDatabaseView;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static practicum.utils.PersistencyConfiguration.*;
+import static practicum.utils.ApplicationConfiguration.*;
 
 /**
  * This method <description of functionality>
@@ -20,9 +20,9 @@ public class CopyDatabaseController extends NavigatorController<CopyDatabaseView
     private final CopyDatabaseService copyDatabaseService;
 
     public CopyDatabaseController(MainApplication mainApplication) {
-        super(mainApplication, new CopyDatabaseView());
+        super(mainApplication, mainApplication.getViewByClass(CopyDatabaseView.class));
 
-        this.copyDatabaseService = new CopyDatabaseService();
+        this.copyDatabaseService = new CopyDatabaseService(mainApplication);
 
         initialize();
     }
@@ -32,15 +32,12 @@ public class CopyDatabaseController extends NavigatorController<CopyDatabaseView
 
         TextField actionField = view.getActionField();
         actionField.setText("Copy PGDB ===> H2DB");
-        actionField.setEditable(false);
 
         TextField pathField = view.getPathField();
         pathField.setText(H2_FILEPATH);
-        pathField.setEditable(false);
 
         TextField statusField = view.getStatusField();
         statusField.setText("idle");
-        statusField.setEditable(false);
 
         view.getStartCopyDatabaseButton().setOnAction(actionEvent -> copyDatabase());
 

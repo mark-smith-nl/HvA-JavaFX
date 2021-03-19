@@ -1,5 +1,6 @@
-package practicum.dao;
+package practicum.dao.database;
 
+import practicum.dao.AbstractDao;
 import practicum.models.AbstractModel;
 
 import java.sql.Connection;
@@ -7,7 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static practicum.utils.PersistencyConfiguration.*;
+import static practicum.utils.ApplicationConfiguration.*;
 
 /**
  * This method <description of functionality>
@@ -17,7 +18,7 @@ import static practicum.utils.PersistencyConfiguration.*;
 public abstract class AbstractDatabaseDao<M extends AbstractModel> implements AbstractDao<M> {
 
     protected Connection getConnection() {
-        return isPostgresDatabase() ? getPostgresConnection() : getH2DbConnection();
+        return usesPostgresDatabase() ? getPostgresConnection() : getH2DbConnection();
     }
 
     private static Connection getPostgresConnection() {
@@ -51,7 +52,6 @@ public abstract class AbstractDatabaseDao<M extends AbstractModel> implements Ab
 
     public abstract void initializeH2DbTable() throws SQLException;
 
-    //TODO set sequence to highest id
     public abstract void copyEntitiesFromPostgresToH2Db() throws SQLException;
 }
 

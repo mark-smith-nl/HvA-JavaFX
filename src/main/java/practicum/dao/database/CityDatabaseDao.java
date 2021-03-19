@@ -1,5 +1,6 @@
-package practicum.dao;
+package practicum.dao.database;
 
+import practicum.dao.database.AbstractDatabaseDao;
 import practicum.models.City;
 import practicum.models.Country;
 
@@ -21,27 +22,25 @@ public class CityDatabaseDao extends AbstractDatabaseDao<City> {
         try (Connection connection = getConnection()) {
             Statement statement = connection.createStatement();
             String selectSql = "SELECT city_id as id, name FROM cities order by name";
-            try (ResultSet resultSet = statement.executeQuery(selectSql)) {
-                while (resultSet.next()) entities.add(new City(resultSet.getInt("id"), resultSet.getString("name")));
-            }
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            while (resultSet.next()) entities.add(new City(resultSet.getInt("id"), resultSet.getString("name")));
         }
 
         return entities;
     }
 
     @Override
-    public City getById(int id) throws SQLException {
+    public City getById(long id) throws SQLException {
         City entity = null;
 
         try (Connection connection = getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT city_id as id, name, description FROM cities where city_id = ?")) {
-            preparedStatement.setInt(1, id);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    if (entity != null) throw new IllegalStateException("Multiple entries found");
-                    entity = new City(resultSet.getInt("id"), resultSet.getString("name"), null, resultSet.getString("description"));
-                }
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                if (entity != null) throw new IllegalStateException("Multiple entries found");
+                entity = new City(resultSet.getInt("id"), resultSet.getString("name"), null, resultSet.getString("description"));
             }
         }
 
@@ -55,7 +54,7 @@ public class CityDatabaseDao extends AbstractDatabaseDao<City> {
                      "UPDATE countries SET name = ?, description = ? WHERE city_id = ?")) {
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getDescription());
-            preparedStatement.setInt(3, entity.getId());
+            preparedStatement.setLong(3, entity.getId());
             preparedStatement.executeUpdate();
         }
     }
@@ -64,7 +63,7 @@ public class CityDatabaseDao extends AbstractDatabaseDao<City> {
     public void remove(City entity) throws SQLException {
         try (Connection connection = getConnection();) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE from cities where country_id=?");
-            preparedStatement.setInt(1, entity.getId());
+            preparedStatement.setLong(1, entity.getId());
             preparedStatement.executeUpdate();
         }
     }
@@ -78,9 +77,23 @@ public class CityDatabaseDao extends AbstractDatabaseDao<City> {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO cities(name, description, country_id) VALUES(?, ?, ?)");
             preparedStatement.setString(1, entity.getName());
             preparedStatement.setString(2, entity.getDescription());
-            preparedStatement.setInt(3, entity.getCountry().getId());
+            preparedStatement.setLong(3, entity.getCountry().getId());
             preparedStatement.execute();
         }
+    }
+
+    @Override
+    public long getHighestId(City... entities) throws SQLException {
+        long highestId;
+        try (Connection connection = getConnection()) {
+            Statement statement = connection.createStatement();
+            String selectSql = "SELECT currval('cities_countryid_seq') as highestId";
+            ResultSet resultSet = statement.executeQuery(selectSql);
+            resultSet.next();
+            highestId = resultSet.getLong("highestId");
+        }
+
+        return highestId;
     }
 
     public List<City> getForCountry(Country country) throws SQLException {
@@ -88,10 +101,9 @@ public class CityDatabaseDao extends AbstractDatabaseDao<City> {
 
         try (Connection connection = getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT city_id as id, name from cities where country_id = ? order by name");
-            preparedStatement.setInt(1, country.getId());
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) entities.add(new City(resultSet.getInt("id"), resultSet.getString("name"), country));
-            }
+            preparedStatement.setLong(1, country.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) entities.add(new City(resultSet.getInt("id"), resultSet.getString("name"), country));
         }
 
         return entities;

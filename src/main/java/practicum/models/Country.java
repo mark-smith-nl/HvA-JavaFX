@@ -34,7 +34,7 @@ public class Country extends AbstractModel {
         this(NEW_ID, null);
     }
 
-    public Country(int id, String name) {
+    public Country(long id, String name) {
         super(id);
         this.name = name;
     }

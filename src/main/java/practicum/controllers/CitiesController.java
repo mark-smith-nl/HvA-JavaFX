@@ -3,6 +3,7 @@ package practicum.controllers;
 import practicum.MainApplication;
 import practicum.models.City;
 import practicum.views.CitiesView;
+import practicum.views.CountryView;
 
 import static java.lang.String.valueOf;
 
@@ -16,7 +17,7 @@ public class CitiesController extends NavigatorController<CitiesView> implements
     private City city;
 
     public CitiesController(MainApplication mainApplication) {
-        super(mainApplication, new CitiesView());
+        super(mainApplication, mainApplication.getViewByClass(CitiesView.class));
 
         initialize();
     }

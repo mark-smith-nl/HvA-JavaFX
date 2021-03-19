@@ -4,22 +4,24 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * This method <description of functionality>
+ * Entity (Pojo/Domain) class for storing business objects.
+ * Domain classes have a unique identifier that does not change once the entity has been persisted.
+ * New (unpersistent) entities have a recognizable id (NEW_ID) which signals the persistency layer to generate an id.
  *
  * @author m.smithhva.nl
  */
 public abstract class AbstractModel implements Serializable {
 
     // Note: An id of -1 marks an entity of being a new, not persisted entity.
-    public static final int NEW_ID = -1;
+    public static final long NEW_ID = -1;
 
-    protected int id;
+    protected long id;
 
-    public AbstractModel(int id) {
+    public AbstractModel(long id) {
         this.id = id;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -35,7 +37,8 @@ public abstract class AbstractModel implements Serializable {
         return id == that.id;
     }
 
-    public void setId(int id) {
+    // Note: This id will only be changed if the entity is a new entity. This is the responsibility of the persistency/service layer.
+    public void setId(long id) {
         if (this.id != NEW_ID) throw new IllegalStateException("Can not reset the id");
         this.id = id;
     }

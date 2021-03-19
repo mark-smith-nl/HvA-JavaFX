@@ -34,8 +34,15 @@ public class CountryController extends NavigatorController<CountryView> implemen
      */
     private Country country;
 
+    private final CountryService countryService;
+
+    private final CityService cityService;
+
     public CountryController(MainApplication mainApplication) {
-        super(mainApplication, new CountryView());
+        super(mainApplication, mainApplication.getViewByClass(CountryView.class));
+
+        countryService = mainApplication.getServiceByClass(CountryService.class);
+        cityService = mainApplication.getServiceByClass(CityService.class);
 
         initialize();
     }
@@ -43,7 +50,7 @@ public class CountryController extends NavigatorController<CountryView> implemen
     protected void initialize() {
         super.initialize();
 
-        ObservableList<Country> countries = FXCollections.observableArrayList(mainApplication.getServiceByClass(CountryService.class).getAll());
+        ObservableList<Country> countries = FXCollections.observableArrayList(countryService.getAll());
 
         ComboBox<Country> countriesField = view.getCountriesField();
         countriesField.getItems().addAll(countries);
@@ -86,9 +93,9 @@ public class CountryController extends NavigatorController<CountryView> implemen
     private void countriesFieldChanged(Country selectedCountry) {
         // Get all the country data from the database
         if (selectedCountry != null) {
-            Country country = mainApplication.getServiceByClass(CountryService.class).getById(selectedCountry.getId());
+            Country country = countryService.getById(selectedCountry.getId());
             // Get all the country data from the database
-            country.setCities(mainApplication.getServiceByClass(CityService.class).getForCountry(country));
+            country.setCities(cityService.getForCountry(country));
             setControlledEntity(country);
         }
     }
@@ -107,7 +114,7 @@ public class CountryController extends NavigatorController<CountryView> implemen
         country.setEUMumber(view.getIsEUMemberField().isSelected());
 
         try {
-            mainApplication.getServiceByClass(CountryService.class).saveOrUpdate(country);
+            countryService.saveOrUpdate(country);
             if (!view.getCountriesField().getItems().contains(country)) {
                 view.getCountriesField().getItems().add(country);
                 view.getCountriesField().getSelectionModel().select(country);
@@ -134,7 +141,7 @@ public class CountryController extends NavigatorController<CountryView> implemen
     }
 
     private void removeCountry() {
-        mainApplication.getServiceByClass(CountryService.class).remove(country);
+        countryService.remove(country);
         view.getCountriesField().getItems().remove(country);
     }
 
@@ -143,7 +150,7 @@ public class CountryController extends NavigatorController<CountryView> implemen
             CitiesController citiesController = mainApplication.getControllerByClass(CitiesController.class);
             City city = view.getCitiesField().getSelectionModel().getSelectedItem();
             if (city != null) {
-                city = mainApplication.getServiceByClass(CityService.class).getById(city.getId());
+                city = cityService.getById(city.getId());
                 city.setCountry(country);
                 citiesController.setControlledEntity(city);
                 view.getCitiesButton().fire();

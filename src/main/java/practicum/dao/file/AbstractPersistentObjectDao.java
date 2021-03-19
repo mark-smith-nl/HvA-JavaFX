@@ -1,8 +1,8 @@
-package practicum.dao;
+package practicum.dao.file;
 
+import practicum.dao.AbstractDao;
 import practicum.models.AbstractModel;
-import practicum.models.Country;
-import practicum.utils.PersistencyConfiguration;
+import practicum.utils.ApplicationConfiguration;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -26,6 +26,8 @@ public abstract class AbstractPersistentObjectDao<M extends AbstractModel> imple
 
     protected abstract String getFileExtension();
 
+    private long highestId = 0;
+
     @Override
     public List<M> getAll() {
         List<M> entities = new ArrayList<>();
@@ -46,7 +48,7 @@ public abstract class AbstractPersistentObjectDao<M extends AbstractModel> imple
     }
 
     @Override
-    public M getById(int id) {
+    public M getById(long id) {
         File file = getFileForEntityWithId(id);
         if (!file.exists()) return null;
         try(ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(file))) {
@@ -60,7 +62,8 @@ public abstract class AbstractPersistentObjectDao<M extends AbstractModel> imple
 
     @Override
     public void insert(M entity)  {
-        File file = new File(PersistencyConfiguration.TEMP_DIR, "_" + entity.getId() + getParentId(null) + "." + entity.getClass().getSimpleName());
+        if (entity.isNewEntity()) entity.setId(++highestId);
+        File file = new File(ApplicationConfiguration.TEMP_DIR, "_" + entity.getId() + getParentId(null) + "." + entity.getClass().getSimpleName());
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(file))) {
             outputStream.writeObject(entity);
             System.out.printf("Persisted %s in %s\n", entity, file.getAbsolutePath());
@@ -88,14 +91,14 @@ public abstract class AbstractPersistentObjectDao<M extends AbstractModel> imple
     }
 
     private Set<File> getAllEntityFiles() {
-        try (Stream<Path> entries = Files.list(Paths.get(PersistencyConfiguration.TEMP_DIR))) {
+        try (Stream<Path> entries = Files.list(Paths.get(ApplicationConfiguration.TEMP_DIR))) {
             return entries
                     .filter(file -> !Files.isDirectory(file))
                     .map(Path::toFile)
                     .filter(p -> p.getName().endsWith(getFileExtension()))
                     .collect(Collectors.toSet());
         } catch (IOException e) {
-            throw new IllegalStateException(format("Could not read directory %s", PersistencyConfiguration.TEMP_DIR), e);
+            throw new IllegalStateException(format("Could not read directory %s", ApplicationConfiguration.TEMP_DIR), e);
         }
     }
 
@@ -103,7 +106,18 @@ public abstract class AbstractPersistentObjectDao<M extends AbstractModel> imple
         return getFileForEntityWithId(entity.getId());
     }
 
-    private File getFileForEntityWithId(int id) {
-        return Paths.get(PersistencyConfiguration.TEMP_DIR + "/_" + id + getFileExtension()).toFile();
+    private File getFileForEntityWithId(long id) {
+        return Paths.get(ApplicationConfiguration.TEMP_DIR + "/_" + id + getFileExtension()).toFile();
+    }
+
+    @Override
+    public long getHighestId(M... entities) throws SQLException {
+        for (M entity : entities) {
+            if (!entity.isNewEntity()) {
+                highestId = Math.max(highestId, entity.getId());
+            }
+        }
+
+        return highestId;
     }
 }

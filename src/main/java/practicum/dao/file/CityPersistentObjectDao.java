@@ -1,13 +1,10 @@
-package practicum.dao;
+package practicum.dao.file;
 
+import practicum.dao.file.AbstractPersistentObjectDao;
 import practicum.models.City;
-import practicum.models.Country;
-import practicum.utils.PersistencyConfiguration;
 
 import java.io.*;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.List;
 
 import static java.lang.String.format;
 

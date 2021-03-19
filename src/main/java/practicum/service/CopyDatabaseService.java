@@ -1,8 +1,11 @@
 package practicum.service;
 
-import practicum.dao.CityDatabaseDao;
-import practicum.dao.CountryDatabaseDao;
-import practicum.utils.PersistencyConfiguration;
+import practicum.MainApplication;
+import practicum.dao.database.CityDatabaseDao;
+import practicum.dao.database.CountryDatabaseDao;
+import practicum.models.City;
+import practicum.models.Country;
+import practicum.utils.ApplicationConfiguration;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -14,34 +17,34 @@ import java.sql.SQLException;
  */
 public class CopyDatabaseService {
 
-    private final CountryDatabaseDao countryPersistentDao;
+    private final CountryDatabaseDao countryDatabaseDao;
 
-    private final CityDatabaseDao cityPersistentDao;
+    private final CityDatabaseDao cityDatabaseDao;
 
-    public CopyDatabaseService() {
-        countryPersistentDao = new CountryDatabaseDao();
-        cityPersistentDao = new CityDatabaseDao();
+    public CopyDatabaseService(MainApplication mainApplication) {
+        countryDatabaseDao = (CountryDatabaseDao) mainApplication.getDaoByModelClass(Country.class);
+        cityDatabaseDao = (CityDatabaseDao) mainApplication.getDaoByModelClass(City.class);
     }
 
     public void start() {
         deleteH2DB();
         try {
-            countryPersistentDao.initializeH2DbTable();
-            countryPersistentDao.copyEntitiesFromPostgresToH2Db();
-            cityPersistentDao.initializeH2DbTable();
-            cityPersistentDao.copyEntitiesFromPostgresToH2Db();
-            System.out.printf("Created file '%s'\n", PersistencyConfiguration.H2_FILEPATH);
+            countryDatabaseDao.initializeH2DbTable();
+            countryDatabaseDao.copyEntitiesFromPostgresToH2Db();
+            cityDatabaseDao.initializeH2DbTable();
+            cityDatabaseDao.copyEntitiesFromPostgresToH2Db();
+            System.out.printf("Created file '%s'\n", ApplicationConfiguration.H2_FILEPATH);
         } catch (SQLException throwables) {
             throw new IllegalStateException("Can not copy database");
         }
     }
 
     private void deleteH2DB() {
-        File h2Db = new File(PersistencyConfiguration.H2_FILEPATH);
+        File h2Db = new File(ApplicationConfiguration.H2_FILEPATH);
         if (h2Db.delete())
-            System.out.printf("Deleted file '%s'\n", PersistencyConfiguration.H2_FILEPATH);
+            System.out.printf("Deleted file '%s'\n", ApplicationConfiguration.H2_FILEPATH);
         else
-            System.out.printf("Failed to deleted file '%s'\n", PersistencyConfiguration.H2_FILEPATH);
+            System.out.printf("Failed to deleted file '%s'\n", ApplicationConfiguration.H2_FILEPATH);
     }
 
 }
